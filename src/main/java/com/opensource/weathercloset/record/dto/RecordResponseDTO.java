@@ -17,17 +17,17 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class RecordResponseDTO {
 
-    private String imageUrl;
-    private int temperature;
-    private int stars;
-    private String comment;
-    private boolean heart;
+    private final String imageUrl;
+    private final int temperature;
+    private final int stars;
+    private final String comment;
+    private final boolean heart;
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
             pattern = "yyyy-MM-dd HH:mm:ss",
             locale = "Asia/Seoul"
     )
-    private LocalDateTime createdAt;
+    private final LocalDateTime createdAt;
 
     public static RecordResponseDTO from (Record record) {
         return RecordResponseDTO.builder()
