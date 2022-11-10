@@ -1,24 +1,21 @@
 package com.opensource.weathercloset.record.domain;
 
+import com.opensource.weathercloset.calendar.domain.DateTimeEntity;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.util.Assert;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
-@DynamicInsert
-@DynamicUpdate
 public class Record {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "record_id", nullable = false)
     private Long id;
 
@@ -27,31 +24,27 @@ public class Record {
 
     private int temperature;
 
-    @ColumnDefault("0")  // TODO : 프론트랑 상의
-    private int satisfaction;
+    @ColumnDefault("0")  // TODO : 프론트랑 상의 -> star 개수를 필수로 할 것인지
+    private int stars;
 
     @Column(length = 50)
-    private String shortLog;  // comment
+    private String comment;
 
-    @ColumnDefault("0")
-    private int heart;
-
-    @Enumerated(EnumType.STRING)
-    private Tag feelingTemperature;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
-    private Date createdAt;
+    private boolean heart;
 
     @Builder
-    public Record(Long id, String imageUrl, int temperature, int satisfaction, String shortLog, int heart, Tag feelingTemperature) {
-        Assert.notNull(imageUrl, "imageUrl must not be null");
-        this.id = id;
+    public Record(String imageUrl, int temperature, int stars, String comment, boolean heart) {
         this.imageUrl = imageUrl;
         this.temperature = temperature;
-        this.satisfaction = satisfaction;
-        this.shortLog = shortLog;
+        this.stars = stars;
+        this.comment = comment;
         this.heart = heart;
-        this.feelingTemperature = feelingTemperature;
     }
+
+    public void update(int stars, String comment, boolean heart) {
+        this.stars = stars;
+        this.comment = comment;
+        this.heart = heart;
+    }
+
 }
