@@ -17,11 +17,9 @@ public class RecordService {
     private final RecordRepository recordRepository;
 
     @Transactional
-    public RecordResponseDTO addRecord(String imageUrl, int temperature,
-                               int stars, String comment, boolean heart) {
+    public RecordResponseDTO addRecord(String imageUrl, int stars, String comment, boolean heart) {
         Record record = Record.builder()
                 .imageUrl(imageUrl)
-                .temperature(temperature)
                 .stars(stars)
                 .comment(comment)
                 .heart(heart)

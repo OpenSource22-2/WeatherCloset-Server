@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class RecordRequestDTO {
 
     private String imageUrl;
-    private int temperature;
     private int stars;
     private String comment;
     private boolean heart;

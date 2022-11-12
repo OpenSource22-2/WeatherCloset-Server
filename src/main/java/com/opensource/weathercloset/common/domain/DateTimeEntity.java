@@ -1,4 +1,4 @@
-package com.opensource.weathercloset.calendar.domain;
+package com.opensource.weathercloset.common.domain;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
