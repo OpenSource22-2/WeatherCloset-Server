@@ -18,7 +18,6 @@ import static lombok.AccessLevel.PRIVATE;
 public class RecordResponseDTO {
 
     private final String imageUrl;
-    private final int temperature;
     private final int stars;
     private final String comment;
     private final boolean heart;
@@ -32,7 +31,6 @@ public class RecordResponseDTO {
     public static RecordResponseDTO from (Record record) {
         return RecordResponseDTO.builder()
                 .imageUrl(record.getImageUrl())
-                .temperature(record.getTemperature())
                 .stars(record.getStars())
                 .comment(record.getComment())
                 .heart(record.isHeart())

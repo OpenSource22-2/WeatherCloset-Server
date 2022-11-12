@@ -23,13 +23,12 @@ public class RecordController {
     @ResponseStatus(OK)
     public ResponseEntity<RecordResponseDTO> postRecord(@RequestBody RecordRequestDTO requestDTO) {
         String imageUrl = requestDTO.getImageUrl();
-        int temperature = requestDTO.getTemperature();
         int stars = requestDTO.getStars();
         String comment = requestDTO.getComment();
         boolean heart = requestDTO.isHeart();
 
         return ResponseEntity.ok(
-                recordService.addRecord(imageUrl, temperature, stars, comment, heart)
+                recordService.addRecord(imageUrl, stars, comment, heart)
         );
     }
 
