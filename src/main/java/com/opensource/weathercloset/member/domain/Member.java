@@ -1,5 +1,7 @@
 package com.opensource.weathercloset.member.domain;
 
+import com.opensource.weathercloset.common.domain.DateTimeEntity;
+import com.opensource.weathercloset.record.domain.Record;
 import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +16,7 @@ import static javax.persistence.CascadeType.ALL;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Member {
+public class Member extends DateTimeEntity {
 
     @Id
     @GeneratedValue

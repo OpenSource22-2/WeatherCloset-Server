@@ -1,5 +1,6 @@
 package com.opensource.weathercloset.weather.domain;
 
+import com.opensource.weathercloset.common.domain.DateTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Weather {
+public class Weather extends DateTimeEntity {
 
     @Id
     @GeneratedValue
