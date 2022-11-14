@@ -2,11 +2,9 @@ package com.opensource.weathercloset.record.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.opensource.weathercloset.record.domain.Record;
-import com.opensource.weathercloset.record.domain.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -28,12 +26,15 @@ public class RecordResponseDTO {
     )
     private final LocalDateTime createdAt;
 
+    private final int temperature = 0;  // 클라이언트와 테스트를 위해 임시로 둠
+
     public static RecordResponseDTO from (Record record) {
         return RecordResponseDTO.builder()
                 .imageUrl(record.getImageUrl())
                 .stars(record.getStars())
                 .comment(record.getComment())
                 .heart(record.isHeart())
+                .createdAt(record.getCreatedAt())
                 .build();
     }
 }
