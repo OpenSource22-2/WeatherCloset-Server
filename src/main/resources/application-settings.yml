@@ -1,0 +1,2 @@
+app:
+  weatherApiToken: ${WEATHER_API_TOKEN}
