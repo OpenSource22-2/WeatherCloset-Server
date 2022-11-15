@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +30,15 @@ public class WeatherController {
 
     private final WeatherService weatherService;
 
+    @Value("${app.weatherApiToken}")
+    private String WEATHER_API_TOKEN;
+
     @GetMapping("/api/parse")
     @ResponseStatus(OK)
     public ResponseEntity<WeatherResponseDTO> addWeather() {
         try {
                 StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList"); /*URL*/
-                urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=hmeLJE6elvJdcnq8CQvYhsy51DJkGVu%2F5qEqYqy388YfjJo1n6PadnJtdFMwNdAsK5ELrh%2FFpgrP3N3HdXcYHw%3D%3D"); /*Service Key*/
+                urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + WEATHER_API_TOKEN); /*Service Key*/
                 urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*요청자료형식(XML/JSON) Default : XML*/
                 urlBuilder.append("&" + URLEncoder.encode("dataCd", "UTF-8") + "=" + URLEncoder.encode("ASOS", "UTF-8")); /*자료 분류 코드(ASOS)*/
                 urlBuilder.append("&" + URLEncoder.encode("dateCd", "UTF-8") + "=" + URLEncoder.encode("DAY", "UTF-8")); /*날짜 분류 코드(DAY)*/
