@@ -15,6 +15,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class RecordResponseDTO {
 
+    private final Long id;
     private final String imageUrl;
     private final int stars;
     private final String comment;
@@ -30,6 +31,7 @@ public class RecordResponseDTO {
 
     public static RecordResponseDTO from (Record record) {
         return RecordResponseDTO.builder()
+                .id(record.getId())
                 .imageUrl(record.getImageUrl())
                 .stars(record.getStars())
                 .comment(record.getComment())
