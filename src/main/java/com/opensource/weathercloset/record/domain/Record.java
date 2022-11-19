@@ -45,7 +45,8 @@ public class Record extends DateTimeEntity {
     private Weather weather;
 
     @Builder
-    public Record(String imageUrl, int temperature, int stars, String comment, boolean heart) {
+    public Record(Member member, String imageUrl, int stars, String comment, boolean heart) {
+        this.member = member;
         this.imageUrl = imageUrl;
         this.stars = stars;
         this.comment = comment;
@@ -55,6 +56,10 @@ public class Record extends DateTimeEntity {
     public void update(int stars, String comment, boolean heart) {
         this.stars = stars;
         this.comment = comment;
+        this.heart = heart;
+    }
+
+    public void setHeart(boolean heart) {
         this.heart = heart;
     }
 
