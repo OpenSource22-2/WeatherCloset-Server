@@ -1,5 +1,7 @@
 package com.opensource.weathercloset.record.service;
 
+import com.opensource.weathercloset.common.exception.EntityNotFoundException;
+import com.opensource.weathercloset.common.exception.ErrorCode;
 import com.opensource.weathercloset.member.domain.Member;
 import com.opensource.weathercloset.member.repository.MemberRepository;
 import com.opensource.weathercloset.record.domain.Record;
@@ -63,12 +65,12 @@ public class RecordService {
 
     private Member getMember(Long id) {
         return memberRepository.findById(id)
-                .orElseThrow(RuntimeException::new);  // TODO : Custom Exception
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     private Record getRecord(Long id) {
         return recordRepository.findById(id)
-                .orElseThrow(RuntimeException::new);  // TODO : Custom Exception
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.RECORD_NOT_FOUND));
     }
 }
 
