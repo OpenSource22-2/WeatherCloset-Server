@@ -9,6 +9,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -17,14 +19,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.BufferedReader;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import static java.net.URLEncoder.encode;
 import static org.springframework.http.HttpStatus.OK;
 
 
+@EnableScheduling
 @RestController
 @RequestMapping(value = "/weather")
 @RequiredArgsConstructor
@@ -36,6 +42,7 @@ public class WeatherController {
     private String WEATHER_API_TOKEN;
     private static final String WEATHER_OPENAPI_URL = "http://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList";
 
+    @Scheduled(cron="0 0 12 * * ?")
     @PostMapping("/api/parse")
     @ResponseStatus(OK)
     public ResponseEntity<Weather> addWeather() {
@@ -52,7 +59,7 @@ public class WeatherController {
                 // date 형으로 바꾸기 전 string 형
                 String tm = (String) jsonWeather.get("tm");
 
-                // float 형으로 바꾸기 전 string 형
+                // double 형으로 바꾸기 전 string 형
                 String strAvgTa = (String) jsonWeather.get("avgTa");
                 String strMinTa = (String) jsonWeather.get("minTa");
                 String strMaxTa = (String) jsonWeather.get("maxTa");
@@ -93,13 +100,18 @@ public class WeatherController {
     }
 
     private String callWeatherApi() throws IOException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Calendar c1 = new GregorianCalendar();
+        c1.add(Calendar.DATE, -1);
+        String strYesterday = sdf.format(c1.getTime());
+
         StringBuilder urlBuilder = new StringBuilder(WEATHER_OPENAPI_URL)
                 .append("?" + encode("serviceKey", "UTF-8") + "=" + WEATHER_API_TOKEN) /*Service Key*/
                 .append("&" + encode("dataType", "UTF-8") + "=" + encode("JSON", "UTF-8")) /*요청자료형식(XML/JSON) Default : XML*/
                 .append("&" + encode("dataCd", "UTF-8") + "=" + encode("ASOS", "UTF-8")) /*자료 분류 코드(ASOS)*/
                 .append("&" + encode("dateCd", "UTF-8") + "=" + encode("DAY", "UTF-8")) /*날짜 분류 코드(DAY)*/
-                .append("&" + encode("startDt", "UTF-8") + "=" + encode("20221124", "UTF-8")) /*조회 기간 시작일(YYYYMMDD)*/
-                .append("&" + encode("endDt", "UTF-8") + "=" + encode("20221124", "UTF-8")) /*조회 기간 종료일(YYYYMMDD) (전일(D-1)까지 제공)*/
+                .append("&" + encode("startDt", "UTF-8") + "=" + encode(strYesterday, "UTF-8")) /*조회 기간 시작일(YYYYMMDD)*/
+                .append("&" + encode("endDt", "UTF-8") + "=" + encode(strYesterday, "UTF-8")) /*조회 기간 종료일(YYYYMMDD) (전일(D-1)까지 제공)*/
                 .append("&" + encode("stnIds", "UTF-8") + "=" + encode("108", "UTF-8")); /*종관기상관측 지점 번호 (활용가이드 하단 첨부 참조)*/
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
