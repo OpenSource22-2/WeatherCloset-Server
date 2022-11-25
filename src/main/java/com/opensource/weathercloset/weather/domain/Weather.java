@@ -1,13 +1,11 @@
 package com.opensource.weathercloset.weather.domain;
 
-import com.opensource.weathercloset.common.domain.DateTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
