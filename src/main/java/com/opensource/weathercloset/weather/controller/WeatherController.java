@@ -41,50 +41,51 @@ public class WeatherController {
     public ResponseEntity<Weather> addWeather() {
         try {
             String result = callWeatherApi();
-            JSONArray parse_item = getJsonArray(result);
+            JSONArray parseItem = getJsonArray(result);
 
             JSONObject jsonWeather;
 
-                for (int i = 0; i < parse_item.size(); i++) {
-                    jsonWeather = (JSONObject) parse_item.get(i);
 
-                    // date 형으로 바꾸기 전 string 형
-                    String tm = (String) jsonWeather.get("tm");
+            for (int i = 0; i < parseItem.size(); i++) {
+                jsonWeather = (JSONObject) parseItem.get(i);
 
-                    // float 형으로 바꾸기 전 string 형
-                    String strAvgTa = (String) jsonWeather.get("avgTa");
-                    String strMinTa = (String) jsonWeather.get("minTa");
-                    String strMaxTa = (String) jsonWeather.get("maxTa");
-                    String strSnow = (String) jsonWeather.get("ddMefs");
-                    String strRain = (String) jsonWeather.get("sumRn");
-                    String strCloud = (String) jsonWeather.get("avgTca");
+                // date 형으로 바꾸기 전 string 형
+                String tm = (String) jsonWeather.get("tm");
 
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA);
-                    LocalDate date = LocalDate.parse(tm, formatter);
+                // float 형으로 바꾸기 전 string 형
+                String strAvgTa = (String) jsonWeather.get("avgTa");
+                String strMinTa = (String) jsonWeather.get("minTa");
+                String strMaxTa = (String) jsonWeather.get("maxTa");
+                String strSnow = (String) jsonWeather.get("ddMefs");
+                String strRain = (String) jsonWeather.get("sumRn");
+                String strCloud = (String) jsonWeather.get("avgTca");
 
-                    float avgTa = stringToFloat(strAvgTa);
-                    float minTa = stringToFloat(strMinTa);
-                    float maxTa = stringToFloat(strMaxTa);
-                    float snow = stringToFloat(strSnow);
-                    float rain = stringToFloat(strRain);
-                    float cloud = stringToFloat(strCloud);
-                    int icon_type = getIconType(snow, rain, cloud);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA);
+                LocalDate date = LocalDate.parse(tm, formatter);
 
-                    Weather weather = Weather.builder()
-                            .avgTa(avgTa)
-                            .minTa(minTa)
-                            .maxTa(maxTa)
-                            .snow(snow)
-                            .rain(rain)
-                            .cloud(cloud)
-                            .date(date)
-                            .icon_type(icon_type)
-                            .build();
+                double avgTa = stringToDouble(strAvgTa);
+                double minTa = stringToDouble(strMinTa);
+                double maxTa = stringToDouble(strMaxTa);
+                double snow = stringToDouble(strSnow);
+                double rain = stringToDouble(strRain);
+                double cloud = stringToDouble(strCloud);
+                int icon_type = getIconType(snow, rain, cloud);
 
-                    return ResponseEntity.ok(
-                            weatherService.addWeather(weather)
-                    );
-                }
+                Weather weather = Weather.builder()
+                        .avgTa(avgTa)
+                        .minTa(minTa)
+                        .maxTa(maxTa)
+                        .snow(snow)
+                        .rain(rain)
+                        .cloud(cloud)
+                        .date(date)
+                        .icon_type(icon_type)
+                        .build();
+
+                return ResponseEntity.ok(
+                        weatherService.addWeather(weather)
+                );
+            }
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -128,26 +129,27 @@ public class WeatherController {
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject) parser.parse(result);
 
-        JSONObject parse_response = (JSONObject) obj.get("response");
-        JSONObject parse_body = (JSONObject) parse_response.get("body");
-        JSONObject parse_items = (JSONObject) parse_body.get("items");
+        JSONObject parseResponse = (JSONObject) obj.get("response");
+        JSONObject parseBody = (JSONObject) parseResponse.get("body");
+        JSONObject parseItems = (JSONObject) parseBody.get("items");
 
-        JSONArray parse_item = (JSONArray) parse_items.get("item");
-        return parse_item;
+        JSONArray parseItem = (JSONArray) parseItems.get("item");
+
+        return parseItem;
     }
 
-    private float stringToFloat(String stringItem) {
-        float floatItem;
+    private double stringToDouble(String stringItem) {
+        double doubleItem;
 
         if (stringItem.isEmpty())
-            floatItem = 0.0f;
+            doubleItem = 0.0;
         else
-            floatItem = Float.parseFloat(stringItem);
+            doubleItem = Double.parseDouble(stringItem);
 
-        return floatItem;
+        return doubleItem;
     }
 
-    private static int getIconType(float snow, float rain, float cloud) {
+    private int getIconType(double snow, double rain, double cloud) {
         int icon_type;
 
         if (snow > 0)

@@ -21,28 +21,28 @@ public class Weather {
 
     private LocalDate date;
     @Column(name = "avg_ta", nullable = false)
-    private float avgTa;
+    private double avgTa;
 
     @Column(name = "min_ta", nullable = false)
-    private float minTa;
+    private double minTa;
 
     @Column(name = "max_ta", nullable = false)
-    private float maxTa;
+    private double maxTa;
 
     @Column(nullable = false)
-    private float snow;
+    private double snow;
 
     @Column(nullable = false)
-    private float rain;
+    private double rain;
 
     @Column(nullable = false)
-    private float cloud;
+    private double cloud;
 
     @Column(nullable = false)
     private int icon_type;
 
     @Builder
-    public Weather (float avgTa, float minTa, float maxTa, float snow, float rain, float cloud, int icon_type, LocalDate date) {
+    public Weather (double avgTa, double minTa, double maxTa, double snow, double rain, double cloud, int icon_type, LocalDate date) {
         this.avgTa = avgTa;
         this.minTa = minTa;
         this.maxTa = maxTa;
