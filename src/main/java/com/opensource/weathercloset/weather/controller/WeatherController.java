@@ -1,6 +1,7 @@
 package com.opensource.weathercloset.weather.controller;
 
-import com.opensource.weathercloset.weather.dto.WeatherResponseDTO;
+import com.opensource.weathercloset.weather.domain.Weather;
+import com.opensource.weathercloset.weather.repository.WeatherRepository;
 import com.opensource.weathercloset.weather.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -29,21 +30,22 @@ import static org.springframework.http.HttpStatus.OK;
 public class WeatherController {
 
     private final WeatherService weatherService;
+    private final WeatherRepository weatherRepository;
 
     @Value("${app.weatherApiToken}")
     private String WEATHER_API_TOKEN;
 
-    @GetMapping("/api/parse")
+    @PostMapping("/api/parse")
     @ResponseStatus(OK)
-    public ResponseEntity<WeatherResponseDTO> addWeather() {
+    public ResponseEntity<Weather> addWeather() {
         try {
                 StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList"); /*URL*/
                 urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + WEATHER_API_TOKEN); /*Service Key*/
                 urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*요청자료형식(XML/JSON) Default : XML*/
                 urlBuilder.append("&" + URLEncoder.encode("dataCd", "UTF-8") + "=" + URLEncoder.encode("ASOS", "UTF-8")); /*자료 분류 코드(ASOS)*/
                 urlBuilder.append("&" + URLEncoder.encode("dateCd", "UTF-8") + "=" + URLEncoder.encode("DAY", "UTF-8")); /*날짜 분류 코드(DAY)*/
-                urlBuilder.append("&" + URLEncoder.encode("startDt", "UTF-8") + "=" + URLEncoder.encode("20221110", "UTF-8")); /*조회 기간 시작일(YYYYMMDD)*/
-                urlBuilder.append("&" + URLEncoder.encode("endDt", "UTF-8") + "=" + URLEncoder.encode("20221112", "UTF-8")); /*조회 기간 종료일(YYYYMMDD) (전일(D-1)까지 제공)*/
+                urlBuilder.append("&" + URLEncoder.encode("startDt", "UTF-8") + "=" + URLEncoder.encode("20221124", "UTF-8")); /*조회 기간 시작일(YYYYMMDD)*/
+                urlBuilder.append("&" + URLEncoder.encode("endDt", "UTF-8") + "=" + URLEncoder.encode("20221124", "UTF-8")); /*조회 기간 종료일(YYYYMMDD) (전일(D-1)까지 제공)*/
                 urlBuilder.append("&" + URLEncoder.encode("stnIds", "UTF-8") + "=" + URLEncoder.encode("108", "UTF-8")); /*종관기상관측 지점 번호 (활용가이드 하단 첨부 참조)*/
                 URL url = new URL(urlBuilder.toString());
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -78,10 +80,10 @@ public class WeatherController {
                 for (int i = 0; i < parse_item.size(); i++) {
                     weather = (JSONObject) parse_item.get(i);
 
-                    // date 형으로 바꾸기 전 string 형으로 바꿈
+                    // date 형으로 바꾸기 전 string 형
                     String tm = (String) weather.get("tm");
 
-                    // double 형으로 바꾸기 전 string 형으로 바꿈
+                    // float 형으로 바꾸기 전 string 형
                     String strAvgTa = (String) weather.get("avgTa");
                     String strMinTa = (String) weather.get("minTa");
                     String strMaxTa = (String) weather.get("maxTa");
@@ -95,16 +97,56 @@ public class WeatherController {
                     float avgTa = Float.parseFloat(strAvgTa);
                     float minTa = Float.parseFloat(strMinTa);
                     float maxTa = Float.parseFloat(strMaxTa);
-                    float snow = Float.parseFloat(strSnow);
-                    float rain = Float.parseFloat(strRain);
-                    float cloud = Float.parseFloat(strCloud);
 
-                    weatherService.addWeather(avgTa, minTa, maxTa, 0, 0, cloud, date);
+                    float snow;
+                    if (strSnow.isEmpty())
+                        snow = 0.0f;
+                    else
+                        snow = Float.parseFloat(strSnow);
+
+                    float rain;
+                    if (strRain.isEmpty())
+                        rain = 0.0f;
+                    else
+                        rain = Float.parseFloat(strRain);
+
+                    float cloud;
+                    if (strCloud.isEmpty())
+                        cloud = 0.0f;
+                    else
+                        cloud = Float.parseFloat(strCloud);
+
+                    int icon_type;
+                    if (snow > 0)
+                        icon_type = 1; // 눈
+                    else if (snow == 0 && rain > 0)
+                        icon_type = 2; // 비
+                    else if (snow == 0 && rain == 0 && cloud >= 8.0)
+                        icon_type = 3; // 흐림
+                    else if (snow == 0 && rain == 0 && cloud >= 3.0)
+                        icon_type = 4; // 조금 흐림
+                    else
+                        icon_type = 5; // 맑음
+
+                    Weather createWeather = Weather.builder()
+                            .avgTa(avgTa)
+                            .minTa(minTa)
+                            .maxTa(maxTa)
+                            .snow(snow)
+                            .rain(rain)
+                            .cloud(cloud)
+                            .date(date)
+                            .icon_type(icon_type)
+                            .build();
+
+                    return ResponseEntity.ok(
+                            weatherService.addWeather(createWeather)
+                    );
                 }
-                rd.close();
-                conn.disconnect();
+            rd.close();
+            conn.disconnect();
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }

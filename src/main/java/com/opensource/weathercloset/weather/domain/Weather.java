@@ -20,29 +20,36 @@ public class Weather {
     private Long id;
 
     private LocalDate date;
-    @Column(nullable = false)
+    @Column(name = "avg_ta", nullable = false)
     private float avgTa;
 
-    @Column(nullable = false)
+    @Column(name = "min_ta", nullable = false)
     private float minTa;
 
-    @Column(nullable = false)
+    @Column(name = "max_ta", nullable = false)
     private float maxTa;
 
+    @Column(nullable = false)
     private float snow;
 
+    @Column(nullable = false)
     private float rain;
 
+    @Column(nullable = false)
     private float cloud;
 
+    @Column(nullable = false)
+    private int icon_type;
+
     @Builder
-    public Weather (float avgTa, float minTa, float maxTa, float snow, float rain, float cloud, LocalDate date) {
+    public Weather (float avgTa, float minTa, float maxTa, float snow, float rain, float cloud, int icon_type, LocalDate date) {
         this.avgTa = avgTa;
         this.minTa = minTa;
         this.maxTa = maxTa;
         this.snow = snow;
         this.rain = rain;
         this.cloud = cloud;
+        this.icon_type = icon_type;
         this.date = date;
     }
 }
