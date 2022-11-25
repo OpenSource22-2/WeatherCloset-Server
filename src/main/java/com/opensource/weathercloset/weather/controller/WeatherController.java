@@ -40,7 +40,8 @@ public class WeatherController {
     @ResponseStatus(OK)
     public ResponseEntity<Weather> addWeather() {
         try {
-            JSONArray parse_item = getJsonArray();
+            String result = callWeatherApi();
+            JSONArray parse_item = getJsonArray(result);
 
             JSONObject jsonWeather;
 
@@ -122,9 +123,7 @@ public class WeatherController {
         return result;
     }
 
-    private JSONArray getJsonArray() throws IOException, ParseException {
-        String result;
-        result = callWeatherApi();
+    private JSONArray getJsonArray(String result) throws IOException, ParseException {
 
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject) parser.parse(result);
