@@ -1,6 +1,6 @@
 package com.opensource.weathercloset.common.advice;
 
-import com.opensource.weathercloset.common.dto.ErrorResponse;
+import com.opensource.weathercloset.common.dto.BasicResponse;
 import com.opensource.weathercloset.common.exception.BusinessException;
 import com.opensource.weathercloset.common.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
@@ -19,53 +19,53 @@ import javax.naming.AuthenticationException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponse> handleException(Exception e) {
+    protected ResponseEntity<BasicResponse> handleException(Exception e) {
         log.error(e.getMessage(), e);
-        ErrorResponse response = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
+        BasicResponse response = BasicResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
     @ExceptionHandler(BusinessException.class)
-    protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+    protected ResponseEntity<BasicResponse> handleBusinessException(BusinessException e) {
         ErrorCode errorCode = e.getErrorCode();
-        ErrorResponse response = ErrorResponse.of(errorCode);
+        BasicResponse response = BasicResponse.of(errorCode);
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE,
+    protected ResponseEntity<BasicResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        BasicResponse response = BasicResponse.of(ErrorCode.INVALID_INPUT_VALUE,
                 e.getBindingResult());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
+    protected ResponseEntity<BasicResponse> handleMethodArgumentTypeMismatchException(
             MethodArgumentTypeMismatchException e) {
-        ErrorResponse response = ErrorResponse.of(e);
+        BasicResponse response = BasicResponse.of(e);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
+    protected ResponseEntity<BasicResponse> handleHttpRequestMethodNotSupportedException(
             HttpRequestMethodNotSupportedException e) {
-        ErrorResponse response = ErrorResponse.of(ErrorCode.METHOD_NOT_ALLOWED);
+        BasicResponse response = BasicResponse.of(ErrorCode.METHOD_NOT_ALLOWED);
         return new ResponseEntity<>(response, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    protected ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
+    protected ResponseEntity<BasicResponse> handleAuthenticationException(AuthenticationException e) {
         log.warn(e.getMessage(), e);
-        ErrorResponse response = ErrorResponse.of(ErrorCode.AUTH_ERROR);
+        BasicResponse response = BasicResponse.of(ErrorCode.AUTH_ERROR);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    protected ResponseEntity<ErrorResponse> handleIllegalStateException(IllegalStateException e) {
+    protected ResponseEntity<BasicResponse> handleIllegalStateException(IllegalStateException e) {
         log.error(e.getMessage(), e);
-        ErrorResponse response = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
+        BasicResponse response = BasicResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
