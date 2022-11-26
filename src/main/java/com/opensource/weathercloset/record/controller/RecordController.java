@@ -1,5 +1,6 @@
 package com.opensource.weathercloset.record.controller;
 
+import com.opensource.weathercloset.common.dto.BasicResponse;
 import com.opensource.weathercloset.record.dto.HeartUpdateRequestDTO;
 import com.opensource.weathercloset.record.dto.RecordRequestDTO;
 import com.opensource.weathercloset.record.dto.RecordResponseDTO;
@@ -8,12 +9,9 @@ import com.opensource.weathercloset.record.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -25,13 +23,14 @@ import static org.springframework.http.HttpStatus.OK;
 public class RecordController {
 
     private final RecordService recordService;
+    private static BasicResponse basicResponse;
 
     @GetMapping("/{memberId}")
     @ResponseStatus(OK)
     @Operation(summary = "사용자 기록 조회", description = "사용자의 기록을 조회합니다")
-    public ResponseEntity<List<RecordResponseDTO>> getRecords(@PathVariable("memberId") Long memberId, @PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(
-                recordService.getRecords(memberId, pageable)
+    public ResponseEntity<BasicResponse> getRecords(@PathVariable("memberId") Long memberId) {
+        return basicResponse.ok(
+                recordService.getRecords(memberId)
         );
     }
 
