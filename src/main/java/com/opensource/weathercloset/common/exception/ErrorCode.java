@@ -1,5 +1,8 @@
 package com.opensource.weathercloset.common.exception;
 
+import lombok.Getter;
+
+@Getter
 public enum ErrorCode {
 
     INTERNAL_SERVER_ERROR(500, "C_001", "서버에 문제가 발생하였습니다."),
@@ -20,26 +23,14 @@ public enum ErrorCode {
     BAD_LOGIN(400, "AU_004", "잘못된 아이디 또는 패스워드입니다."),
     ;
 
+    private final int status;
     private final String code;
     private final String message;
-    private final int status;
 
     ErrorCode(int status, String code, String message) {
         this.status = status;
         this.message = message;
         this.code = code;
-    }
-
-    public String getMessage() {
-        return this.message;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public int getStatus() {
-        return status;
     }
 
 }

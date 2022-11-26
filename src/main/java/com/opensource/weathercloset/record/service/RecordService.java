@@ -8,7 +8,6 @@ import com.opensource.weathercloset.record.domain.Record;
 import com.opensource.weathercloset.record.dto.RecordResponseDTO;
 import com.opensource.weathercloset.record.repository.RecordRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,9 +21,9 @@ public class RecordService {
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
 
-    public List<RecordResponseDTO> getRecords(Long memberId, Pageable pageable) {
+    public List<RecordResponseDTO> getRecords(Long memberId) {
         Member member = getMember(memberId);
-        return recordRepository.findAllByMember(member, pageable).stream()
+        return recordRepository.findAllByMember(member).stream()
                 .map(RecordResponseDTO::from)
                 .collect(Collectors.toList());
     }

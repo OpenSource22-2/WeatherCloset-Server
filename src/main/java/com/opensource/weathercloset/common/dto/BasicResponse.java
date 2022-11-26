@@ -1,69 +1,71 @@
 package com.opensource.weathercloset.common.dto;
 
 import com.opensource.weathercloset.common.exception.ErrorCode;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ErrorResponse {
+@NoArgsConstructor
+public class BasicResponse {
 
+    private int status;
     private String message;
+    private Object data;
 
-    private List<FieldError> errors;
+    @Builder
+    public BasicResponse (int status, String message, Object data) {
+        this.status = status;
+        this.message = message;
+        this.data = data;
+    }
 
-    private String code;
+    public ResponseEntity<BasicResponse> ok(Object data) {
+        BasicResponse basicResponse = new BasicResponse(200, "성공", data);
+        return new ResponseEntity<>(basicResponse, HttpStatus.OK);
+    }
 
-    private ErrorResponse(ErrorCode code, List<FieldError> errors) {
+    private BasicResponse(ErrorCode code, List<FieldError> errors) {
+        this.status = code.getStatus();
         this.message = code.getMessage();
-        this.errors = errors;
-        this.code = code.getCode();
+        this.data = errors;
     }
 
-    private ErrorResponse(ErrorCode code) {
+    private BasicResponse(ErrorCode code) {
+        this.status = code.getStatus();
         this.message = code.getMessage();
-        this.code = code.getCode();
-        this.errors = new ArrayList<>();
+        this.data = new ArrayList<>();
     }
 
-    public static ErrorResponse of(ErrorCode code, BindingResult bindingResult) {
-        return new ErrorResponse(code, FieldError.of(bindingResult));
+    public static BasicResponse of(ErrorCode code, BindingResult bindingResult) {
+        return new BasicResponse(code, FieldError.of(bindingResult));
     }
 
-    public static ErrorResponse of(ErrorCode code) {
-        return new ErrorResponse(code);
+    public static BasicResponse of(ErrorCode code) {
+        return new BasicResponse(code);
     }
 
-    public static ErrorResponse of(MethodArgumentTypeMismatchException e) {
+    public static BasicResponse of(MethodArgumentTypeMismatchException e) {
         String value = Optional.ofNullable(e.getValue())
                 .map(Object::toString)
                 .orElse("");
 
-        List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of(
-                e.getName(), value, e.getErrorCode());
-        return new ErrorResponse(ErrorCode.INVALID_TYPE_VALUE, errors);
+        List<FieldError> errors = FieldError.of(e.getName(), value, e.getErrorCode());
+        return new BasicResponse(ErrorCode.INVALID_TYPE_VALUE, errors);
     }
 
     @Getter
+    @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class FieldError {
         private String field;
         private String value;
         private String reason;
-
-        private FieldError(String field, String value, String reason) {
-            this.field = field;
-            this.value = value;
-            this.reason = reason;
-        }
 
         public static List<FieldError> of(String field, String value, String reason) {
             List<FieldError> fieldErrors = new ArrayList<>();
@@ -83,4 +85,5 @@ public class ErrorResponse {
                     .collect(Collectors.toList());
         }
     }
+
 }
