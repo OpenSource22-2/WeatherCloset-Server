@@ -42,7 +42,7 @@ public class WeatherController {
     private String WEATHER_API_TOKEN;
     private static final String WEATHER_OPENAPI_URL = "http://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList";
 
-    @Scheduled(cron="0 30 12 * * ?")
+    @Scheduled(cron="0 45 12 * * ?")
     @PostMapping("/api/parse")
     @ResponseStatus(OK)
     public ResponseEntity<Weather> addWeather() {
