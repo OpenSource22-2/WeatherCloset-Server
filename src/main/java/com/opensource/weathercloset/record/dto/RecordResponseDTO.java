@@ -28,7 +28,8 @@ public class RecordResponseDTO {
     )
     private final LocalDateTime createdAt;
 
-    private final int temperature = 0;  // 클라이언트와 테스트를 위해 임시로 둠
+    private final double temperature;
+    private final String icon;
 
     public static RecordResponseDTO from (Record record) {
         return RecordResponseDTO.builder()
@@ -39,6 +40,8 @@ public class RecordResponseDTO {
                 .comment(record.getComment())
                 .heart(record.isHeart())
                 .createdAt(record.getCreatedAt())
+                .temperature(record.getWeather().getAvgTa())
+//                .icon(record.getWeather().getIconType())
                 .build();
     }
 }

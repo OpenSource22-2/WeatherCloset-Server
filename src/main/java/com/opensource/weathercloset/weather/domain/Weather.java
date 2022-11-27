@@ -37,17 +37,17 @@ public class Weather extends DateTimeEntity {
     private double cloud;
 
     @Column(nullable = false)
-    private int icon_type;
+    private int iconType;
 
     @Builder
-    public Weather (double avgTa, double minTa, double maxTa, double snow, double rain, double cloud, int icon_type, LocalDate date) {
+    public Weather (double avgTa, double minTa, double maxTa, double snow, double rain, double cloud, int iconType, LocalDate date) {
         this.avgTa = avgTa;
         this.minTa = minTa;
         this.maxTa = maxTa;
         this.snow = snow;
         this.rain = rain;
         this.cloud = cloud;
-        this.icon_type = icon_type;
+        this.iconType = iconType;
         this.date = date;
     }
 }

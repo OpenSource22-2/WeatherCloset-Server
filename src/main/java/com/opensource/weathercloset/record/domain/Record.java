@@ -63,4 +63,8 @@ public class Record extends DateTimeEntity {
         this.heart = heart;
     }
 
+    public void setWeather(Weather weather) {
+        this.weather = weather;
+    }
+
 }
