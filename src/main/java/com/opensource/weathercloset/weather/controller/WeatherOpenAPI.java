@@ -34,7 +34,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping(value = "/weather")
 @RequiredArgsConstructor
-public class WeatherController {
+public class WeatherOpenAPI {
 
     private final WeatherService weatherService;
 
@@ -136,7 +136,7 @@ public class WeatherController {
         return result;
     }
 
-    private JSONArray getJsonArray(String result) throws IOException, ParseException {
+    private JSONArray getJsonArray(String result) throws ParseException {
 
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject) parser.parse(result);
