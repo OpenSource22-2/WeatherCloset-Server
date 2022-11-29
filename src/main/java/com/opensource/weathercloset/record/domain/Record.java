@@ -45,7 +45,7 @@ public class Record extends DateTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(fetch = LAZY, cascade = ALL, orphanRemoval = true)
+    @OneToOne(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @JoinColumn(name = "weather_id")
     private Weather weather;
 
