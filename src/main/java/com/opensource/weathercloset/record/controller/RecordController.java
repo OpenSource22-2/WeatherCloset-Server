@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.time.LocalDate;
+
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -41,9 +43,10 @@ public class RecordController {
         int stars = requestDTO.getStars();
         String comment = requestDTO.getComment();
         boolean heart = requestDTO.isHeart();
+        LocalDate recordDate = requestDTO.getRecordDate();
 
         return basicResponse.ok(
-                recordService.addRecord(memberId, imageUrl, stars, comment, heart)
+                recordService.addRecord(memberId, imageUrl, stars, comment, heart, recordDate)
         );
     }
 
