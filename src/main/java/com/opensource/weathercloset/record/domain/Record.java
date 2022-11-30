@@ -45,7 +45,7 @@ public class Record extends DateTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(fetch = EAGER)
+    @OneToOne(fetch = EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "weather_id")
     private Weather weather;
 
