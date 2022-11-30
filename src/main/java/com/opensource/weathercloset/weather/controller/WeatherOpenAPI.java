@@ -34,7 +34,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping(value = "/weather")
 @RequiredArgsConstructor
-public class WeatherController {
+public class WeatherOpenAPI {
 
     private final WeatherService weatherService;
 
@@ -76,7 +76,7 @@ public class WeatherController {
                 double snow = stringToDouble(strSnow);
                 double rain = stringToDouble(strRain);
                 double cloud = stringToDouble(strCloud);
-                int icon_type = getIconType(snow, rain, cloud);
+                int iconType = getIconType(snow, rain, cloud);
 
                 Weather weather = Weather.builder()
                         .avgTa(avgTa)
@@ -86,7 +86,7 @@ public class WeatherController {
                         .rain(rain)
                         .cloud(cloud)
                         .date(date)
-                        .icon_type(icon_type)
+                        .iconType(iconType)
                         .build();
 
                 return ResponseEntity.ok(
@@ -136,7 +136,7 @@ public class WeatherController {
         return result;
     }
 
-    private JSONArray getJsonArray(String result) throws IOException, ParseException {
+    private JSONArray getJsonArray(String result) throws ParseException {
 
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject) parser.parse(result);
@@ -162,20 +162,20 @@ public class WeatherController {
     }
 
     private int getIconType(double snow, double rain, double cloud) {
-        int icon_type;
+        int iconType;
 
         if (snow > 0)
-            icon_type = 1; // 눈
+            iconType = 1; // 눈
         else if (snow == 0 && rain > 0)
-            icon_type = 2; // 비
+            iconType = 2; // 비
         else if (snow == 0 && rain == 0 && cloud >= 8.0)
-            icon_type = 3; // 흐림
+            iconType = 3; // 흐림
         else if (snow == 0 && rain == 0 && cloud >= 3.0)
-            icon_type = 4; // 조금 흐림
+            iconType = 4; // 조금 흐림
         else
-            icon_type = 5; // 맑음
+            iconType = 5; // 맑음
 
-        return icon_type;
+        return iconType;
     }
 
 }

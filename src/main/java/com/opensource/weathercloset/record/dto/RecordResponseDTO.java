@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -23,12 +23,13 @@ public class RecordResponseDTO {
     private final boolean heart;
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd HH:mm:ss",
+            pattern = "yyyy.MM.dd",
             locale = "Asia/Seoul"
     )
-    private final LocalDateTime createdAt;
+    private final LocalDate recordDate;
 
-    private final int temperature = 0;  // 클라이언트와 테스트를 위해 임시로 둠
+    private final double temperature;
+    private final int icon;
 
     public static RecordResponseDTO from (Record record) {
         return RecordResponseDTO.builder()
@@ -38,7 +39,9 @@ public class RecordResponseDTO {
                 .stars(record.getStars())
                 .comment(record.getComment())
                 .heart(record.isHeart())
-                .createdAt(record.getCreatedAt())
+                .recordDate(record.getRecordDate())
+                .temperature(record.getWeather().getAvgTa())
+                .icon(record.getWeather().getIconType())
                 .build();
     }
 }
