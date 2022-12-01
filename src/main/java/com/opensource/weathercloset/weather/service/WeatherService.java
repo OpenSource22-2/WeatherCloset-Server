@@ -41,8 +41,21 @@ public class WeatherService {
         if (weather == null) throw new InvalidValueException(ErrorCode.WEATHER_NOT_NULL);
         LocalDate date = weather.getDate();
         Optional<Weather> delWeather = weatherRepository.findByDate(date);
-        if (delWeather.isPresent())
-            weatherRepository.delete(delWeather.get());
+        Long weatherId;
+        if (delWeather.isPresent()) {
+            weatherId = delWeather.get().getId();
+            weather = Weather.builder()
+                    .id(weatherId)
+                    .avgTa(weather.getAvgTa())
+                    .minTa(weather.getMinTa())
+                    .maxTa(weather.getMaxTa())
+                    .rain(weather.getRain())
+                    .snow(weather.getSnow())
+                    .cloud(weather.getCloud())
+                    .date(weather.getDate())
+                    .iconType(weather.getIconType())
+                    .build();
+        }
         return weatherRepository.save(weather);
     }
 }
