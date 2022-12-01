@@ -91,14 +91,6 @@ public class RecordService {
     }
 
     @Transactional
-    public void setWeather(Weather newWeather) {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        List<Record> records = recordRepository.findAllByRecordDate(yesterday);
-        records.forEach(o -> o.setWeather(newWeather));
-        recordRepository.saveAll(records);
-    }
-
-    @Transactional
     public void deleteRecord(Long recordId) {
         Record record = findRecord(recordId);
         recordRepository.delete(record);
