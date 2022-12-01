@@ -63,14 +63,16 @@ public class RecordController {
 
     @PutMapping("/{recordId}")
     @ResponseStatus(NO_CONTENT)
-    @Operation(summary = "기록 수정", description = "별점, 한 줄 기록, 좋아요 여부를 수정합니다")
+    @Operation(summary = "기록 수정", description = "이미지, 별점, 한 줄 기록, 좋아요 여부, 날짜를 수정합니다")
     public ResponseEntity updateRecord(@PathVariable("recordId") Long recordId,
                                                       @RequestBody RecordUpdateRequestDTO requestDTO) {
+        String imageUrl = requestDTO.getImageUrl();
         int stars = requestDTO.getStars();
         String comment = requestDTO.getComment();
         boolean heart = requestDTO.isHeart();
+        LocalDate recordDate = requestDTO.getRecordDate();
 
-        recordService.updateRecord(recordId, stars, comment, heart);
+        recordService.updateRecord(imageUrl, recordId, stars, comment, heart, recordDate);
         return ResponseEntity.noContent().build();
     }
 

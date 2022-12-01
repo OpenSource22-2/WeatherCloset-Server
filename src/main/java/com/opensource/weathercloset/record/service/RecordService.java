@@ -77,9 +77,9 @@ public class RecordService {
     }
 
     @Transactional
-    public void updateRecord(Long recordId, int stars, String comment, boolean heart) {
+    public void updateRecord(String imageUrl, Long recordId, int stars, String comment, boolean heart, LocalDate recordDate) {
         Record record = findRecord(recordId);
-        record.update(stars, comment, heart);
+        record.update(imageUrl, stars, comment, heart, recordDate);
         recordRepository.save(record);
     }
 
