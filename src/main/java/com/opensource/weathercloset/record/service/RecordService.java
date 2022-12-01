@@ -29,15 +29,21 @@ public class RecordService {
     private final WeatherRepository weatherRepository;
 
     public List<RecordResponseDTO> getRecords(Long memberId) {
-        Member member = getMember(memberId);
+        Member member = findMember(memberId);
         return recordRepository.findAllByMember(member).stream()
                 .map(RecordResponseDTO::from)
                 .collect(Collectors.toList());
     }
 
+    public RecordResponseDTO getRecord(Long recordId) {
+        Record record = findRecord(recordId);
+        return RecordResponseDTO.from(record);
+    }
+
+
     @Transactional
     public RecordResponseDTO addRecord(Long memberId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate) {
-        Member member = getMember(memberId);
+        Member member = findMember(memberId);
         LocalDate date = recordDate;
         Optional<Weather> optWeather = weatherRepository.findByDate(date);
         Weather weather;
@@ -71,14 +77,14 @@ public class RecordService {
 
     @Transactional
     public void updateRecord(Long recordId, int stars, String comment, boolean heart) {
-        Record record = getRecord(recordId);
+        Record record = findRecord(recordId);
         record.update(stars, comment, heart);
         recordRepository.save(record);
     }
 
     @Transactional
     public void updateHeart(Long recordId, boolean heart) {
-        Record record = getRecord(recordId);
+        Record record = findRecord(recordId);
         record.setHeart(heart);
         recordRepository.save(record);
     }
@@ -93,16 +99,16 @@ public class RecordService {
 
     @Transactional
     public void deleteRecord(Long recordId) {
-        Record record = getRecord(recordId);
+        Record record = findRecord(recordId);
         recordRepository.delete(record);
     }
 
-    private Member getMember(Long id) {
+    private Member findMember(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
-    private Record getRecord(Long id) {
+    private Record findRecord(Long id) {
         return recordRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.RECORD_NOT_FOUND));
     }
