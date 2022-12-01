@@ -6,6 +6,7 @@ import com.opensource.weathercloset.member.domain.Member;
 import com.opensource.weathercloset.member.repository.MemberRepository;
 import com.opensource.weathercloset.record.domain.Record;
 import com.opensource.weathercloset.record.dto.RecordResponseDTO;
+import com.opensource.weathercloset.record.dto.RecordsResponseDTO;
 import com.opensource.weathercloset.record.repository.RecordRepository;
 import com.opensource.weathercloset.weather.domain.Weather;
 import com.opensource.weathercloset.weather.repository.WeatherRepository;
@@ -28,10 +29,10 @@ public class RecordService {
     private final MemberRepository memberRepository;
     private final WeatherRepository weatherRepository;
 
-    public List<RecordResponseDTO> getRecords(Long memberId) {
+    public List<RecordsResponseDTO> getRecords(Long memberId) {
         Member member = findMember(memberId);
         return recordRepository.findAllByMember(member).stream()
-                .map(RecordResponseDTO::from)
+                .map(RecordsResponseDTO::from)
                 .collect(Collectors.toList());
     }
 
