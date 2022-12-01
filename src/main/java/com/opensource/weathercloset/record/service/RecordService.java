@@ -6,6 +6,7 @@ import com.opensource.weathercloset.member.domain.Member;
 import com.opensource.weathercloset.member.repository.MemberRepository;
 import com.opensource.weathercloset.record.domain.Record;
 import com.opensource.weathercloset.record.dto.RecordResponseDTO;
+import com.opensource.weathercloset.record.dto.RecordsResponseDTO;
 import com.opensource.weathercloset.record.repository.RecordRepository;
 import com.opensource.weathercloset.weather.domain.Weather;
 import com.opensource.weathercloset.weather.repository.WeatherRepository;
@@ -28,16 +29,22 @@ public class RecordService {
     private final MemberRepository memberRepository;
     private final WeatherRepository weatherRepository;
 
-    public List<RecordResponseDTO> getRecords(Long memberId) {
-        Member member = getMember(memberId);
+    public List<RecordsResponseDTO> getRecords(Long memberId) {
+        Member member = findMember(memberId);
         return recordRepository.findAllByMember(member).stream()
-                .map(RecordResponseDTO::from)
+                .map(RecordsResponseDTO::from)
                 .collect(Collectors.toList());
     }
 
+    public RecordResponseDTO getRecord(Long recordId) {
+        Record record = findRecord(recordId);
+        return RecordResponseDTO.from(record);
+    }
+
+
     @Transactional
     public RecordResponseDTO addRecord(Long memberId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate) {
-        Member member = getMember(memberId);
+        Member member = findMember(memberId);
         LocalDate date = recordDate;
         Optional<Weather> optWeather = weatherRepository.findByDate(date);
         Weather weather;
@@ -70,15 +77,15 @@ public class RecordService {
     }
 
     @Transactional
-    public void updateRecord(Long recordId, int stars, String comment, boolean heart) {
-        Record record = getRecord(recordId);
-        record.update(stars, comment, heart);
+    public void updateRecord(String imageUrl, Long recordId, int stars, String comment, boolean heart, LocalDate recordDate) {
+        Record record = findRecord(recordId);
+        record.update(imageUrl, stars, comment, heart, recordDate);
         recordRepository.save(record);
     }
 
     @Transactional
     public void updateHeart(Long recordId, boolean heart) {
-        Record record = getRecord(recordId);
+        Record record = findRecord(recordId);
         record.setHeart(heart);
         recordRepository.save(record);
     }
@@ -93,16 +100,16 @@ public class RecordService {
 
     @Transactional
     public void deleteRecord(Long recordId) {
-        Record record = getRecord(recordId);
+        Record record = findRecord(recordId);
         recordRepository.delete(record);
     }
 
-    private Member getMember(Long id) {
+    private Member findMember(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
-    private Record getRecord(Long id) {
+    private Record findRecord(Long id) {
         return recordRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.RECORD_NOT_FOUND));
     }

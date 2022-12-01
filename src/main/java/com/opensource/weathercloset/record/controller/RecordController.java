@@ -26,7 +26,7 @@ public class RecordController {
     private final RecordService recordService;
     private BasicResponse basicResponse = new BasicResponse();
 
-    @GetMapping("/{memberId}")
+    @GetMapping("/member/{memberId}")
     @ResponseStatus(OK)
     @Operation(summary = "사용자 기록 조회", description = "사용자의 기록을 조회합니다")
     public ResponseEntity<BasicResponse> getRecords(@PathVariable("memberId") Long memberId) {
@@ -35,10 +35,21 @@ public class RecordController {
         );
     }
 
+    @GetMapping("/{recordId}")
+    @ResponseStatus(OK)
+    @Operation(summary = "기록 단건 조회", description = "기록을 단건 조회합니다")
+    public ResponseEntity<BasicResponse> getRecord(@PathVariable("recordId") Long recordId) {
+        return basicResponse.ok(
+                recordService.getRecord(recordId)
+        );
+    }
+
+
     @PostMapping("/{memberId}")
     @ResponseStatus(OK)
     @Operation(summary = "기록 등록", description = "기록을 신규 등록합니다")
-    public ResponseEntity<BasicResponse> addRecord(@PathVariable("memberId") Long memberId, @RequestBody RecordRequestDTO requestDTO) {
+    public ResponseEntity<BasicResponse> addRecord(@PathVariable("memberId") Long memberId,
+                                                   @RequestBody RecordRequestDTO requestDTO) {
         String imageUrl = requestDTO.getImageUrl();
         int stars = requestDTO.getStars();
         String comment = requestDTO.getComment();
@@ -52,14 +63,16 @@ public class RecordController {
 
     @PutMapping("/{recordId}")
     @ResponseStatus(NO_CONTENT)
-    @Operation(summary = "기록 수정", description = "별점, 한 줄 기록, 좋아요 여부를 수정합니다")
+    @Operation(summary = "기록 수정", description = "이미지, 별점, 한 줄 기록, 좋아요 여부, 날짜를 수정합니다")
     public ResponseEntity updateRecord(@PathVariable("recordId") Long recordId,
                                                       @RequestBody RecordUpdateRequestDTO requestDTO) {
+        String imageUrl = requestDTO.getImageUrl();
         int stars = requestDTO.getStars();
         String comment = requestDTO.getComment();
         boolean heart = requestDTO.isHeart();
+        LocalDate recordDate = requestDTO.getRecordDate();
 
-        recordService.updateRecord(recordId, stars, comment, heart);
+        recordService.updateRecord(imageUrl, recordId, stars, comment, heart, recordDate);
         return ResponseEntity.noContent().build();
     }
 
