@@ -41,6 +41,12 @@ public class RecordService {
         return RecordResponseDTO.from(record);
     }
 
+    public List<RecordsResponseDTO> getCalendarInfo(Long memberId, LocalDate date) {
+        Member member = findMember(memberId);
+        return recordRepository.findAllByMemberAndDate(memberId, date).stream()
+                .map(RecordsResponseDTO::from)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public RecordResponseDTO addRecord(Long memberId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate) {
