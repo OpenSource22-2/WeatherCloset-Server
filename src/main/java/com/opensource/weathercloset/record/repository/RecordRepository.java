@@ -16,7 +16,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
     @Query("select distinct r from Record r where r.weather.avgTa between :min and :max")
     List<Record> findAllByTemperatureBetween(@Param("min")double minTemperature, @Param("max")double maxTemperature);
 
-    @Query(value = "select distinct * from Record where member_id = :memberId and " +
+    @Query(value = "select distinct * from record where member_id = :memberId and " +
             "date between :date and LAST_DAY(:date) " +
             "order by date ASC limit 8", nativeQuery = true)
     List<Record> findAllByMemberAndDate(@Param("memberId")Long memberId, @Param("date")LocalDate date);
