@@ -16,7 +16,9 @@ public enum ErrorCode {
     RECORD_NOT_FOUND(400, "RE_001", "기록을 찾을 수 없습니다."),
 
     WEATHER_NOT_NULL(400, "WE_001", "날씨 정보가 빈 값입니다."),
-    WEATHER_NOT_FOUND(400, "WE_001=2", "날씨 정보를 찾을 수 없습니다."),
+    WEATHER_NOT_FOUND(400, "WE_002", "날씨 정보를 찾을 수 없습니다."),
+
+    TAG_NOT_FOUND(400, "TA_001", "태그를 찾을 수 없습니다."),
 
     AUTH_ERROR(400, "AU_001", "인증 관련 오류가 발생했습니다."),
     DUPLICATED_EMAIL(400, "AU_002", "이미 존재하는 E-mail입니다."),
