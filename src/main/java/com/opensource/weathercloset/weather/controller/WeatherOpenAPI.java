@@ -2,6 +2,8 @@ package com.opensource.weathercloset.weather.controller;
 
 import com.opensource.weathercloset.weather.domain.Weather;
 import com.opensource.weathercloset.weather.service.WeatherService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -34,6 +36,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping(value = "/weather")
 @RequiredArgsConstructor
+@Tag(name = "weather", description = "날씨 정보 자동 저장 API")
 public class WeatherOpenAPI {
 
     private final WeatherService weatherService;
@@ -45,6 +48,7 @@ public class WeatherOpenAPI {
     @Scheduled(cron="0 0 12 * * ?")
     @PostMapping("/api/parse")
     @ResponseStatus(OK)
+    @Operation(summary = "날씨 API 자동 호출", description = "매일 오후 12시에 전날의 날씨 정보를 호출하여 DB에 저장합니다")
     public ResponseEntity<Weather> addWeather() {
         try {
             String result = callWeatherApi();
