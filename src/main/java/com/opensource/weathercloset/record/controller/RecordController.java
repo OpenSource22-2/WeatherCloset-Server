@@ -20,7 +20,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping(value = "/record")
 @RequiredArgsConstructor
-@Tag(name = "record", description = "저장 API")
+@Tag(name = "record", description = "기록 API")
 public class RecordController {
 
     private final RecordService recordService;
@@ -43,7 +43,6 @@ public class RecordController {
                 recordService.getRecord(recordId)
         );
     }
-
 
     @PostMapping("/{memberId}")
     @ResponseStatus(OK)
