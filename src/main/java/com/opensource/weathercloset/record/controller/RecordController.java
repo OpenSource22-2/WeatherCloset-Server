@@ -8,15 +8,12 @@ import com.opensource.weathercloset.record.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
-import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -43,18 +40,6 @@ public class RecordController {
     public ResponseEntity<BasicResponse> getRecord(@PathVariable("recordId") Long recordId) {
         return basicResponse.ok(
                 recordService.getRecord(recordId)
-        );
-    }
-
-    @GetMapping("/calendar/{memberId}")
-    @ResponseStatus(OK)
-    @Operation(summary = "캘린더(사용자 월 기록 조회)", description = "사용자의 월 기록을 조회합니다")
-    public ResponseEntity<BasicResponse> getCalendarInfo(@PathVariable("memberId") Long memberId,
-                                                         @RequestParam int year, @RequestParam int month) {
-        LocalDate localDate = LocalDate.of(year, month, 1);
-        System.out.println("localDate = " + localDate);
-        return basicResponse.ok(
-                recordService.getCalendarInfo(memberId, localDate)
         );
     }
 
