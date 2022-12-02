@@ -1,7 +1,6 @@
 package com.opensource.weathercloset.record.controller;
 
 import com.opensource.weathercloset.common.dto.BasicResponse;
-import com.opensource.weathercloset.record.dto.CalendarRequestDTO;
 import com.opensource.weathercloset.record.dto.HeartUpdateRequestDTO;
 import com.opensource.weathercloset.record.dto.RecordRequestDTO;
 import com.opensource.weathercloset.record.dto.RecordUpdateRequestDTO;
@@ -20,7 +19,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "record", description = "저장 API")
+@Tag(name = "record", description = "기록 API")
 public class RecordController {
 
     private final RecordService recordService;
