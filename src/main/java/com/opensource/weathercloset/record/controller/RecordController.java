@@ -18,9 +18,8 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping(value = "/record")
 @RequiredArgsConstructor
-@Tag(name = "record", description = "기록 API")
+@Tag(name = "record", description = "저장 API")
 public class RecordController {
 
     private final RecordService recordService;
@@ -35,7 +34,7 @@ public class RecordController {
         );
     }
 
-    @GetMapping("/{recordId}")
+    @GetMapping("/record/{recordId}")
     @ResponseStatus(OK)
     @Operation(summary = "기록 단건 조회", description = "기록을 단건 조회합니다")
     public ResponseEntity<BasicResponse> getRecord(@PathVariable("recordId") Long recordId) {
@@ -44,7 +43,7 @@ public class RecordController {
         );
     }
 
-    @PostMapping("/{memberId}")
+    @PostMapping("/record/{memberId}")
     @ResponseStatus(OK)
     @Operation(summary = "기록 등록", description = "기록을 신규 등록합니다")
     public ResponseEntity<BasicResponse> addRecord(@PathVariable("memberId") Long memberId,
@@ -60,7 +59,7 @@ public class RecordController {
         );
     }
 
-    @PutMapping("/{recordId}")
+    @PutMapping("/record/{recordId}")
     @ResponseStatus(NO_CONTENT)
     @Operation(summary = "기록 수정", description = "이미지, 별점, 한 줄 기록, 좋아요 여부, 날짜를 수정합니다")
     public ResponseEntity updateRecord(@PathVariable("recordId") Long recordId,
@@ -75,7 +74,7 @@ public class RecordController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/like/{recordId}")
+    @PutMapping("/record/like/{recordId}")
     @ResponseStatus(NO_CONTENT)
     @Operation(summary = "좋아요 수정", description = "좋아요 여부를 수정합니다")
     public ResponseEntity updateHeart(@PathVariable("recordId") Long recordId,
@@ -86,7 +85,7 @@ public class RecordController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{recordId}")
+    @DeleteMapping("/record/{recordId}")
     @ResponseStatus(NO_CONTENT)
     @Operation(summary = "기록 삭제", description = "기록을 삭제합니다")
     public ResponseEntity deleteRecord(@PathVariable Long recordId) {

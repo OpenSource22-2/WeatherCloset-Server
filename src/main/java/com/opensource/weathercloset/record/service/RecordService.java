@@ -41,7 +41,6 @@ public class RecordService {
         return RecordResponseDTO.from(record);
     }
 
-
     @Transactional
     public RecordResponseDTO addRecord(Long memberId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate) {
         Member member = findMember(memberId);
