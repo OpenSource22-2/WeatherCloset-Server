@@ -1,6 +1,7 @@
 package com.opensource.weathercloset.tag.domain;
 
 import com.opensource.weathercloset.record.domain.Record;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +28,7 @@ public class RecordTag {
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
+    @Builder
     public RecordTag(Record record, Tag tag) {
         this.record = record;
         this.tag = tag;

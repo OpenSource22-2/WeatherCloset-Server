@@ -8,6 +8,7 @@ import com.opensource.weathercloset.record.domain.Record;
 import com.opensource.weathercloset.record.dto.RecordResponseDTO;
 import com.opensource.weathercloset.record.dto.RecordsResponseDTO;
 import com.opensource.weathercloset.record.repository.RecordRepository;
+import com.opensource.weathercloset.tag.domain.Tag;
 import com.opensource.weathercloset.weather.domain.Weather;
 import com.opensource.weathercloset.weather.repository.WeatherRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -42,7 +44,7 @@ public class RecordService {
     }
 
     @Transactional
-    public RecordResponseDTO addRecord(Long memberId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate) {
+    public RecordResponseDTO addRecord(Long memberId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate, Set<Tag> tags) {
         Member member = findMember(memberId);
         LocalDate date = recordDate;
         Optional<Weather> optWeather = weatherRepository.findByDate(date);
@@ -71,14 +73,16 @@ public class RecordService {
                 .weather(weather)
                 .recordDate(recordDate)
                 .build();
+        record.setTags(tags);
+
         Record saved = recordRepository.save(record);
         return RecordResponseDTO.from(saved);
     }
 
     @Transactional
-    public void updateRecord(String imageUrl, Long recordId, int stars, String comment, boolean heart, LocalDate recordDate) {
+    public void updateRecord(String imageUrl, Long recordId, int stars, String comment, boolean heart, LocalDate recordDate, Set<Tag> tags) {
         Record record = findRecord(recordId);
-        record.update(imageUrl, stars, comment, heart, recordDate);
+        record.update(imageUrl, stars, comment, heart, recordDate, tags);
         recordRepository.save(record);
     }
 

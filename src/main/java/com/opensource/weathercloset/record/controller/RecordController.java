@@ -5,24 +5,23 @@ import com.opensource.weathercloset.record.dto.HeartUpdateRequestDTO;
 import com.opensource.weathercloset.record.dto.RecordRequestDTO;
 import com.opensource.weathercloset.record.dto.RecordUpdateRequestDTO;
 import com.opensource.weathercloset.record.service.RecordService;
+import com.opensource.weathercloset.tag.domain.Tag;
+import com.opensource.weathercloset.tag.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.time.LocalDate;
-
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "record", description = "저장 API")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "record", description = "저장 API")
 public class RecordController {
 
     private final RecordService recordService;
+    private final TagService tagService;
     private final BasicResponse basicResponse = new BasicResponse();
 
     @GetMapping("/member/{memberId}")
@@ -50,9 +49,10 @@ public class RecordController {
         String comment = requestDTO.getComment();
         boolean heart = requestDTO.isHeart();
         LocalDate recordDate = requestDTO.getRecordDate();
+        Set<Tag> tags = getTags(requestDTO.getTagIds());
 
         return basicResponse.ok(
-                recordService.addRecord(memberId, imageUrl, stars, comment, heart, recordDate)
+                recordService.addRecord(memberId, imageUrl, stars, comment, heart, recordDate, tags)
         );
     }
 
@@ -65,8 +65,9 @@ public class RecordController {
         String comment = requestDTO.getComment();
         boolean heart = requestDTO.isHeart();
         LocalDate recordDate = requestDTO.getRecordDate();
+        Set<Tag> tags = getTags(requestDTO.getTagIds());
 
-        recordService.updateRecord(imageUrl, recordId, stars, comment, heart, recordDate);
+        recordService.updateRecord(imageUrl, recordId, stars, comment, heart, recordDate, tags);
         return basicResponse.noContent();
     }
 
@@ -85,6 +86,10 @@ public class RecordController {
     public ResponseEntity<BasicResponse> deleteRecord(@PathVariable Long recordId) {
         recordService.deleteRecord(recordId);
         return basicResponse.noContent();
+    }
+
+    private Set<Tag> getTags(Set<Long> tagIds) {
+        return tagService.getTagsByIds(tagIds);
     }
 
 }

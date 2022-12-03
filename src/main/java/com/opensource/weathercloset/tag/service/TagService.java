@@ -35,4 +35,5 @@ public class TagService {
         return tagRepository.findById(tagId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.TAG_NOT_FOUND));
     }
+
 }
