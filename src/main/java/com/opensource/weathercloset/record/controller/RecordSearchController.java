@@ -20,7 +20,6 @@ public class RecordSearchController {
     private BasicResponse basicResponse = new BasicResponse();
 
     @GetMapping()
-    @ResponseStatus(OK)
     @Operation(summary = "기록 기온 범위 조회", description = "기온 범위에 해당하는 기록을 조회합니다")
     public ResponseEntity<BasicResponse> searchRecords (@RequestParam double minTemperature,
                                                         @RequestParam double maxTemperature) {
