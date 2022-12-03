@@ -23,7 +23,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class RecordController {
 
     private final RecordService recordService;
-    private BasicResponse basicResponse = new BasicResponse();
+    private final BasicResponse basicResponse = new BasicResponse();
 
     @GetMapping("/member/{memberId}")
     @ResponseStatus(OK)
@@ -62,7 +62,7 @@ public class RecordController {
     @PutMapping("/record/{recordId}")
     @ResponseStatus(NO_CONTENT)
     @Operation(summary = "기록 수정", description = "이미지, 별점, 한 줄 기록, 좋아요 여부, 날짜를 수정합니다")
-    public ResponseEntity updateRecord(@PathVariable("recordId") Long recordId,
+    public ResponseEntity<BasicResponse> updateRecord(@PathVariable("recordId") Long recordId,
                                                       @RequestBody RecordUpdateRequestDTO requestDTO) {
         String imageUrl = requestDTO.getImageUrl();
         int stars = requestDTO.getStars();
@@ -71,26 +71,26 @@ public class RecordController {
         LocalDate recordDate = requestDTO.getRecordDate();
 
         recordService.updateRecord(imageUrl, recordId, stars, comment, heart, recordDate);
-        return ResponseEntity.noContent().build();
+        return basicResponse.noContent();
     }
 
     @PutMapping("/record/like/{recordId}")
     @ResponseStatus(NO_CONTENT)
     @Operation(summary = "좋아요 수정", description = "좋아요 여부를 수정합니다")
-    public ResponseEntity updateHeart(@PathVariable("recordId") Long recordId,
+    public ResponseEntity<BasicResponse> updateHeart(@PathVariable("recordId") Long recordId,
                                        @RequestBody HeartUpdateRequestDTO requestDTO) {
         boolean heart = requestDTO.isHeart();
 
         recordService.updateHeart(recordId, heart);
-        return ResponseEntity.noContent().build();
+        return basicResponse.noContent();
     }
 
     @DeleteMapping("/record/{recordId}")
     @ResponseStatus(NO_CONTENT)
     @Operation(summary = "기록 삭제", description = "기록을 삭제합니다")
-    public ResponseEntity deleteRecord(@PathVariable Long recordId) {
+    public ResponseEntity<BasicResponse> deleteRecord(@PathVariable Long recordId) {
         recordService.deleteRecord(recordId);
-        return ResponseEntity.noContent().build();
+        return basicResponse.noContent();
     }
 
 }

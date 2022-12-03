@@ -30,6 +30,11 @@ public class BasicResponse {
         return new ResponseEntity<>(basicResponse, HttpStatus.OK);
     }
 
+    public ResponseEntity<BasicResponse> noContent() {
+        BasicResponse basicResponse = new BasicResponse(204, "성공", "");
+        return new ResponseEntity<>(basicResponse, HttpStatus.OK);
+    }
+
     private BasicResponse(ErrorCode code, List<FieldError> errors) {
         this.status = code.getStatus();
         this.message = code.getMessage();
