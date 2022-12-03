@@ -23,7 +23,6 @@ public class CalendarController {
 
 
     @GetMapping("/{memberId}")
-    @ResponseStatus(OK)
     @Operation(summary = "캘린더(사용자 월 기록 조회)", description = "사용자의 월 기록을 조회합니다")
     public ResponseEntity<BasicResponse> getCalendarInfo(@PathVariable("memberId") Long memberId,
                                                          @RequestParam int year, @RequestParam int month) {

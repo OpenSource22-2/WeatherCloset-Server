@@ -47,7 +47,6 @@ public class WeatherOpenAPI {
 
     @Scheduled(cron="0 0 12 * * ?")
     @PostMapping("/api/parse")
-    @ResponseStatus(OK)
     @Operation(summary = "날씨 API 자동 호출", description = "매일 오후 12시에 전날의 날씨 정보를 호출하여 DB에 저장합니다")
     public ResponseEntity<Weather> addWeather() {
         try {
