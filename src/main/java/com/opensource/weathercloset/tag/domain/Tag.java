@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -22,7 +22,7 @@ public class Tag {
 
     private String name;
 
-    @OneToMany(mappedBy = "tag", fetch = LAZY)
+    @OneToMany(mappedBy = "tag", fetch = EAGER)
     private Set<RecordTag> recordTagSet = new HashSet<>();
 
     public Tag(String name) {

@@ -52,16 +52,7 @@ public class RecordService {
         if (optWeather.isPresent())     // 과거
             weather = optWeather.get();
         else {                          // 오늘
-            weather = Weather.builder()
-                    .avgTa(99.0)
-                    .minTa(0.0)
-                    .maxTa(0.0)
-                    .snow(0.0)
-                    .rain(0.0)
-                    .cloud(0.0)
-                    .date(recordDate)
-                    .iconType(-1)
-                    .build();
+            weather = dummyWeather(recordDate);
         }
 
         Record record = Record.builder()
@@ -78,6 +69,8 @@ public class RecordService {
         Record saved = recordRepository.save(record);
         return RecordResponseDTO.from(saved);
     }
+
+
 
     @Transactional
     public void updateRecord(String imageUrl, Long recordId, int stars, String comment, boolean heart, LocalDate recordDate, Set<Tag> tags) {
@@ -108,5 +101,18 @@ public class RecordService {
         return recordRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.RECORD_NOT_FOUND));
     }
-}
 
+    private Weather dummyWeather(LocalDate recordDate) {
+        return Weather.builder()
+                .avgTa(99.0)
+                .minTa(0.0)
+                .maxTa(0.0)
+                .snow(0.0)
+                .rain(0.0)
+                .cloud(0.0)
+                .date(recordDate)
+                .iconType(-1)
+                .build();
+    }
+
+}

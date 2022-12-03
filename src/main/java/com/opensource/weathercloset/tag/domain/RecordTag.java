@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
@@ -20,11 +20,11 @@ public class RecordTag {
     @Column(name = "record_tag_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "record_id")
     private Record record;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
@@ -32,5 +32,9 @@ public class RecordTag {
     public RecordTag(Record record, Tag tag) {
         this.record = record;
         this.tag = tag;
+    }
+
+    public String getTagName() {
+        return this.getTag().getName();
     }
 }

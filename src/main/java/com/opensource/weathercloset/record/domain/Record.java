@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -55,7 +53,7 @@ public class Record extends DateTimeEntity {
     @JoinColumn(name = "weather_id")
     private Weather weather;
 
-    @OneToMany(mappedBy = "record", fetch = LAZY, cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "record", fetch = EAGER, cascade = ALL, orphanRemoval = true)
     private Set<RecordTag> tags = new HashSet<>();
 
     @Builder
@@ -85,15 +83,14 @@ public class Record extends DateTimeEntity {
                 .collect(Collectors.toSet());
     }
 
-    public Set<Tag> getTags() {
+    public Set<String> getTags() {
         return tags.stream()
-                .map(RecordTag::getTag)
+                .map(RecordTag::getTagName)
                 .collect(Collectors.toSet());
     }
 
     public void setHeart(boolean heart) {
         this.heart = heart;
     }
-
 
 }
