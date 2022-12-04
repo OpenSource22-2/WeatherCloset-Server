@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
@@ -46,7 +47,7 @@ public class Record extends DateTimeEntity {
     @Column(name = "date", nullable = false)
     private LocalDate recordDate;
 
-    @ManyToOne(fetch = EAGER)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -54,7 +55,7 @@ public class Record extends DateTimeEntity {
     @JoinColumn(name = "weather_id")
     private Weather weather;
 
-    @OneToMany(mappedBy = "record", fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "record", fetch = LAZY, cascade = ALL, orphanRemoval = true)
     private Set<RecordTag> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "record", fetch = EAGER, cascade = REMOVE, orphanRemoval = true)
