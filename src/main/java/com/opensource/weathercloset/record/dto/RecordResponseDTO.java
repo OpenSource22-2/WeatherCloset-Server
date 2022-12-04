@@ -27,7 +27,7 @@ public class RecordResponseDTO {
             pattern = "yyyy. MM. dd",
             locale = "Asia/Seoul"
     )
-    private final LocalDate recordDate;
+    private final LocalDate date;
 
     private final double temperature;
     private final int icon;
@@ -41,7 +41,7 @@ public class RecordResponseDTO {
                 .stars(record.getStars())
                 .comment(record.getComment())
                 .heart(record.didHeart())
-                .recordDate(record.getRecordDate())
+                .date(record.getDate())
                 .temperature(record.getWeather().getAvgTa())
                 .icon(record.getWeather().getIconType())
                 .tags(record.getTags())

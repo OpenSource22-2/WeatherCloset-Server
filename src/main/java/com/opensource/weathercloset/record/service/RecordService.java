@@ -72,7 +72,7 @@ public class RecordService {
                 .stars(stars)
                 .comment(comment)
                 .weather(weather)
-                .recordDate(recordDate)
+                .date(recordDate)
                 .build();
         record.setTags(tags);
         if(heart)

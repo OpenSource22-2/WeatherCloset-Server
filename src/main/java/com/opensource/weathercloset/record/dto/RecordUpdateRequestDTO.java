@@ -25,7 +25,7 @@ public class RecordUpdateRequestDTO {
             pattern = "yyyy. MM. dd",
             locale = "Asia/Seoul"
     )
-    private LocalDate recordDate;
+    private LocalDate date;
     @Size(min = 1, max = 3)
     private Set<Long> tagIds;
 
