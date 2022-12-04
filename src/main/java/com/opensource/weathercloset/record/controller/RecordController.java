@@ -50,6 +50,7 @@ public class RecordController {
         String comment = requestDTO.getComment();
         boolean heart = requestDTO.isHeart();
         LocalDate recordDate = requestDTO.getRecordDate();
+        Set<Tag> tags = getTags(requestDTO.getTagIds());
 
         return basicResponse.ok(
                 recordService.addRecord(memberId, imageUrl, stars, comment, heart, recordDate, tags)
@@ -65,6 +66,7 @@ public class RecordController {
         String comment = requestDTO.getComment();
         boolean heart = requestDTO.isHeart();
         LocalDate recordDate = requestDTO.getRecordDate();
+        Set<Tag> tags = getTags(requestDTO.getTagIds());
 
         recordService.updateRecord(memberId, recordId, imageUrl, stars, comment, heart, recordDate, tags);
         return basicResponse.noContent();

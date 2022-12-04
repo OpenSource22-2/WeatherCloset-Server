@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Getter
@@ -16,7 +16,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class Tag {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = AUTO)
     @Column(name = "tag_id")
     private Long id;
 

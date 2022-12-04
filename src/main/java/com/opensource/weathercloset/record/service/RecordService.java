@@ -62,7 +62,6 @@ public class RecordService {
                 .imageUrl(imageUrl)
                 .stars(stars)
                 .comment(comment)
-                .heart(heart)
                 .weather(weather)
                 .recordDate(recordDate)
                 .build();
@@ -75,10 +74,10 @@ public class RecordService {
     }
 
     @Transactional
-    public void updateRecord(Long memberId, Long recordId, String imageUrl, Long recordId, int stars, String comment, boolean heart, LocalDate recordDate) {
+    public void updateRecord(Long memberId, Long recordId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate, Set<Tag> tags) {
         Member member = findMember(memberId);
         Record record = findRecord(recordId);
-        record.update(imageUrl, stars, comment, heart, recordDate, tags);
+        record.update(imageUrl, stars, comment, recordDate, tags);
         if(heart)  // false -> true
             heartService.heart(member, record);
         else   // true -> false
@@ -104,7 +103,7 @@ public class RecordService {
         recordRepository.delete(record);
     }
 
-    private Member findMember(Long id) {
+    public Member findMember(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
     }
