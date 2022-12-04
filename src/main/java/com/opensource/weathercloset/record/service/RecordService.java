@@ -10,6 +10,7 @@ import com.opensource.weathercloset.record.dto.RecordResponseDTO;
 import com.opensource.weathercloset.record.dto.RecordsResponseDTO;
 import com.opensource.weathercloset.record.repository.RecordRepository;
 import com.opensource.weathercloset.tag.domain.Tag;
+import com.opensource.weathercloset.tag.repository.TagRepository;
 import com.opensource.weathercloset.weather.domain.Weather;
 import com.opensource.weathercloset.weather.repository.WeatherRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class RecordService {
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
     private final WeatherRepository weatherRepository;
+    private final TagRepository tagRepository;
 
     public List<RecordsResponseDTO> getRecords(Long memberId) {
         Member member = findMember(memberId);
@@ -105,7 +107,7 @@ public class RecordService {
     }
 
     private void checkIsOwner(Member member, Record record) {
-        if (record.ownerEquals(member)) {
+        if (!record.ownerEquals(member)) {
             throw new AuthException(ErrorCode.AUTH_ERROR);
         }
     }
