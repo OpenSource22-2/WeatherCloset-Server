@@ -32,7 +32,7 @@ public class RecordsResponseDTO {
                 .id(record.getId())
                 .username(record.getMember().getNickname())
                 .imageUrl(record.getImageUrl())
-                .heart(record.didHeart())
+                .heart(record.isHeart())
                 .recordDate(record.getRecordDate())
                 .temperature(record.getWeather().getAvgTa())
                 .build();

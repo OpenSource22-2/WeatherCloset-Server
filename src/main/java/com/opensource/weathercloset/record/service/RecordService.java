@@ -64,11 +64,10 @@ public class RecordService {
                 .stars(stars)
                 .comment(comment)
                 .weather(weather)
+                .heart(heart)
                 .recordDate(recordDate)
                 .build();
         record.setTags(tags);
-        if(heart)
-            heartService.heart(member, record);
 
         Record saved = recordRepository.save(record);
         return RecordResponseDTO.from(saved);
@@ -107,6 +106,12 @@ public class RecordService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.RECORD_NOT_FOUND));
     }
 
+    private void checkIsOwner(Member member, Record record) {
+        if (record.ownerEquals(member)) {
+            throw new AuthException(ErrorCode.AUTH_ERROR);
+        }
+    }
+
     private Weather dummyWeather(LocalDate recordDate) {
         return Weather.builder()
                 .avgTa(99.0)
@@ -118,12 +123,6 @@ public class RecordService {
                 .date(recordDate)
                 .iconType(-1)
                 .build();
-    }
-
-    private void checkIsOwner(Member member, Record record) {
-        if (record.ownerEquals(member)) {
-            throw new AuthException(ErrorCode.AUTH_ERROR);
-        }
     }
 
 }
