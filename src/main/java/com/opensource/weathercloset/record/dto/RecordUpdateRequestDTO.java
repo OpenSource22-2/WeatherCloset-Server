@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Builder
 @Getter
@@ -24,5 +26,7 @@ public class RecordUpdateRequestDTO {
             locale = "Asia/Seoul"
     )
     private LocalDate recordDate;
+    @Size(min = 1, max = 3)
+    private Set<Long> tagIds;
 
 }

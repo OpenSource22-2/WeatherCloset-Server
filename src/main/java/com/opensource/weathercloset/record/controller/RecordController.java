@@ -5,20 +5,24 @@ import com.opensource.weathercloset.record.dto.HeartUpdateRequestDTO;
 import com.opensource.weathercloset.record.dto.RecordRequestDTO;
 import com.opensource.weathercloset.record.dto.RecordUpdateRequestDTO;
 import com.opensource.weathercloset.record.service.RecordService;
+import com.opensource.weathercloset.tag.domain.Tag;
+import com.opensource.weathercloset.tag.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.time.LocalDate;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "record", description = "저장 API")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "record", description = "저장 API")
 public class RecordController {
 
     private final RecordService recordService;
+    private final TagService tagService;
     private final BasicResponse basicResponse = new BasicResponse();
 
     @GetMapping("/member/{memberId}")
@@ -48,22 +52,21 @@ public class RecordController {
         LocalDate recordDate = requestDTO.getRecordDate();
 
         return basicResponse.ok(
-                recordService.addRecord(memberId, imageUrl, stars, comment, heart, recordDate)
+                recordService.addRecord(memberId, imageUrl, stars, comment, heart, recordDate, tags)
         );
     }
 
     @PutMapping("/record/{memberId}/{recordId}")
     @Operation(summary = "기록 수정", description = "이미지, 별점, 한 줄 기록, 좋아요 여부, 날짜를 수정합니다")
     public ResponseEntity<BasicResponse> updateRecord(@PathVariable("memberId") Long memberId,
-                                                      @PathVariable("recordId") Long recordId,
-                                                      @RequestBody RecordUpdateRequestDTO requestDTO) {
+                                                      @PathVariable("recordId") Long recordId, @RequestBody RecordUpdateRequestDTO requestDTO) {
         String imageUrl = requestDTO.getImageUrl();
         int stars = requestDTO.getStars();
         String comment = requestDTO.getComment();
         boolean heart = requestDTO.isHeart();
         LocalDate recordDate = requestDTO.getRecordDate();
 
-        recordService.updateRecord(memberId, recordId, imageUrl, stars, comment, heart, recordDate);
+        recordService.updateRecord(memberId, recordId, imageUrl, stars, comment, heart, recordDate, tags);
         return basicResponse.noContent();
     }
 
@@ -83,6 +86,10 @@ public class RecordController {
     public ResponseEntity<BasicResponse> deleteRecord(@PathVariable Long recordId) {
         recordService.deleteRecord(recordId);
         return basicResponse.noContent();
+    }
+
+    private Set<Tag> getTags(Set<Long> tagIds) {
+        return tagService.getTagsByIds(tagIds);
     }
 
 }

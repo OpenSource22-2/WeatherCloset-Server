@@ -16,8 +16,10 @@ public enum ErrorCode {
     RECORD_NOT_FOUND(400, "RE_001", "기록을 찾을 수 없습니다."),
 
     WEATHER_NOT_NULL(400, "WE_001", "날씨 정보가 빈 값입니다."),
-    WEATHER_NOT_FOUND(400, "WE_001=2", "날씨 정보를 찾을 수 없습니다."), 
-    
+    WEATHER_NOT_FOUND(400, "WE_002", "날씨 정보를 찾을 수 없습니다."),
+
+    TAG_NOT_FOUND(400, "TA_001", "태그를 찾을 수 없습니다."),
+
     HEART_NOT_FOUND(400, "HE_001", "좋아요 정보를 찾을 수 없습니다."),
     HEART_DUPLICATE(400, "HE_002", "좋아요는 한 번만 누를 수 있습니다."),
 
