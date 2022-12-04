@@ -55,10 +55,10 @@ public class Record extends DateTimeEntity {
     @JoinColumn(name = "weather_id")
     private Weather weather;
 
-    @OneToMany(mappedBy = "record", fetch = LAZY, cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "record", fetch = EAGER, cascade = ALL, orphanRemoval = true)
     private Set<RecordTag> tags = new HashSet<>();
 
-    @OneToMany(mappedBy = "record", fetch = EAGER, cascade = REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "record", fetch = LAZY, cascade = REMOVE, orphanRemoval = true)
     private Set<Heart> hearts = new HashSet<>();
 
     @Builder
