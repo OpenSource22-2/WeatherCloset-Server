@@ -37,7 +37,7 @@ public class RecordService {
 
     public List<RecordsResponseDTO> getRecords(Long memberId) {
         Member member = findMember(memberId);
-        return recordRepository.findAllByMember(member).stream()
+        return recordRepository.findAllByMemberOrderByCreatedAtDesc(member).stream()
                 .map(RecordsResponseDTO::from)
                 .collect(Collectors.toList());
     }
