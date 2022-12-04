@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
@@ -41,6 +42,8 @@ public class Record extends DateTimeEntity {
     @Column(length = 50)
     private String comment;
 
+    private boolean heart;
+
     @Column(name = "date", nullable = false)
     private LocalDate recordDate;
 
@@ -52,35 +55,31 @@ public class Record extends DateTimeEntity {
     @JoinColumn(name = "weather_id")
     private Weather weather;
 
-    @OneToMany(mappedBy = "record", fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "record", fetch = LAZY, cascade = ALL, orphanRemoval = true)
     private Set<RecordTag> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "record", fetch = EAGER, cascade = REMOVE, orphanRemoval = true)
     private Set<Heart> hearts = new HashSet<>();
 
     @Builder
-    public Record(Member member, Weather weather, Set<RecordTag> tags, String imageUrl, int stars, String comment, LocalDate recordDate) {
+    public Record(Member member, Weather weather, Set<RecordTag> tags, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate) {
         this.weather = weather;
         this.member = member;
         this.tags = tags;
         this.imageUrl = imageUrl;
         this.stars = stars;
         this.comment = comment;
+        this.heart = heart;
         this.recordDate = recordDate;
     }
 
-    public void update(String imageUrl, int stars, String comment, LocalDate recordDate, Set<Tag> tags) {
+    public void update(String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate, Set<Tag> tags) {
         this.imageUrl = imageUrl;
         this.stars = stars;
         this.comment = comment;
+        this.heart = heart;
         this.recordDate = recordDate;
-        setTags(tags);
-    }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags.stream()
-                .map(tag -> new RecordTag(this, tag))
-                .collect(Collectors.toSet());
+        updateTags(tags);
     }
 
     public Set<String> getTags() {
@@ -89,9 +88,32 @@ public class Record extends DateTimeEntity {
                 .collect(Collectors.toSet());
     }
 
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags.stream()
+                .map(tag -> new RecordTag(this, tag))
+                .collect(Collectors.toSet());
+    }
+
+    public void updateTags(Set<Tag> tags) {
+        this.tags.clear();
+        this.tags.addAll(
+                tags.stream()
+                .map(tag -> new RecordTag(this, tag))
+                .collect(Collectors.toSet())
+        );
+    }
+
+    public void setHeart(boolean heart) {
+        this.heart = heart;
+    }
+
     public boolean didHeart(){
         return hearts.stream()
                 .anyMatch(heart -> heart.didHeart(this.getId()));
+    }
+
+    public boolean ownerEquals(Member member) {
+        return this.member.equals(member);
     }
 
 }

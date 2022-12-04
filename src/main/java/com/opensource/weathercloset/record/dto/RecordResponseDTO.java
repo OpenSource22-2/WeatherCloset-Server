@@ -40,7 +40,7 @@ public class RecordResponseDTO {
                 .imageUrl(record.getImageUrl())
                 .stars(record.getStars())
                 .comment(record.getComment())
-                .heart(record.didHeart())
+                .heart(record.isHeart())
                 .recordDate(record.getRecordDate())
                 .temperature(record.getWeather().getAvgTa())
                 .icon(record.getWeather().getIconType())
