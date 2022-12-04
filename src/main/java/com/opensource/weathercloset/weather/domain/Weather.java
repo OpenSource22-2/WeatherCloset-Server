@@ -7,13 +7,15 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+import static javax.persistence.GenerationType.AUTO;
+
 @Entity
 @Getter
 @NoArgsConstructor
 public class Weather extends DateTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = AUTO)
     @Column(name = "weather_id", nullable = false)
     private Long id;
 

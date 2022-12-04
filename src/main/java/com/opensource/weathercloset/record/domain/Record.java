@@ -1,6 +1,7 @@
 package com.opensource.weathercloset.record.domain;
 
 import com.opensource.weathercloset.common.domain.DateTimeEntity;
+import com.opensource.weathercloset.heart.domain.Heart;
 import com.opensource.weathercloset.member.domain.Member;
 import com.opensource.weathercloset.tag.domain.RecordTag;
 import com.opensource.weathercloset.tag.domain.Tag;
@@ -17,9 +18,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Getter
@@ -27,7 +28,7 @@ import static javax.persistence.FetchType.EAGER;
 @NoArgsConstructor
 public class Record extends DateTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = AUTO)
     @Column(name = "record_id", nullable = false)
     private Long id;
 
@@ -39,8 +40,6 @@ public class Record extends DateTimeEntity {
 
     @Column(length = 50)
     private String comment;
-
-    private boolean heart;
 
     @Column(name = "date", nullable = false)
     private LocalDate recordDate;
@@ -56,23 +55,24 @@ public class Record extends DateTimeEntity {
     @OneToMany(mappedBy = "record", fetch = EAGER, cascade = ALL, orphanRemoval = true)
     private Set<RecordTag> tags = new HashSet<>();
 
+    @OneToMany(mappedBy = "record", fetch = EAGER, cascade = REMOVE, orphanRemoval = true)
+    private Set<Heart> hearts = new HashSet<>();
+
     @Builder
-    public Record(Member member, Weather weather, Set<RecordTag> tags, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate) {
+    public Record(Member member, Weather weather, Set<RecordTag> tags, String imageUrl, int stars, String comment, LocalDate recordDate) {
         this.weather = weather;
         this.member = member;
         this.tags = tags;
         this.imageUrl = imageUrl;
         this.stars = stars;
         this.comment = comment;
-        this.heart = heart;
         this.recordDate = recordDate;
     }
 
-    public void update(String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate, Set<Tag> tags) {
+    public void update(String imageUrl, int stars, String comment, LocalDate recordDate, Set<Tag> tags) {
         this.imageUrl = imageUrl;
         this.stars = stars;
         this.comment = comment;
-        this.heart = heart;
         this.recordDate = recordDate;
         setTags(tags);
     }
@@ -89,8 +89,9 @@ public class Record extends DateTimeEntity {
                 .collect(Collectors.toSet());
     }
 
-    public void setHeart(boolean heart) {
-        this.heart = heart;
+    public boolean didHeart(){
+        return hearts.stream()
+                .anyMatch(heart -> heart.didHeart(this.getId()));
     }
 
 }
