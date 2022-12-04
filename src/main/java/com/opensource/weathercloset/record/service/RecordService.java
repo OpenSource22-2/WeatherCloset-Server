@@ -47,7 +47,7 @@ public class RecordService {
     }
 
     @Transactional
-    public RecordResponseDTO addRecord(Long memberId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate, Set<Tag> tags) {
+    public RecordResponseDTO addRecord(Long memberId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate, List<Tag> tags) {
         Member member = findMember(memberId);
         LocalDate date = recordDate;
         Optional<Weather> optWeather = weatherRepository.findByDate(date);
@@ -74,7 +74,7 @@ public class RecordService {
     }
 
     @Transactional
-    public void updateRecord(Long memberId, Long recordId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate, Set<Tag> tags) {
+    public void updateRecord(Long memberId, Long recordId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate, List<Tag> tags) {
         Member member = findMember(memberId);
         Record record = findRecord(recordId);
         checkIsOwner(member, record);
@@ -87,6 +87,7 @@ public class RecordService {
         Member member = findMember(memberId);
         Record record = findRecord(recordId);
         checkIsOwner(member, record);
+        record.setHeart(heart);
         recordRepository.save(record);
     }
 
