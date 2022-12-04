@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -30,6 +31,7 @@ public class RecordResponseDTO {
 
     private final double temperature;
     private final int icon;
+    private final Set<String> tags;
 
     public static RecordResponseDTO from (Record record) {
         return RecordResponseDTO.builder()
@@ -42,6 +44,7 @@ public class RecordResponseDTO {
                 .recordDate(record.getRecordDate())
                 .temperature(record.getWeather().getAvgTa())
                 .icon(record.getWeather().getIconType())
+                .tags(record.getTags())
                 .build();
     }
 }
