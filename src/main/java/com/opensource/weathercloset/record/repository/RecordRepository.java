@@ -24,6 +24,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
     @Query(value = "select distinct r from Record r " +
             "where r.member.id = :memberId and " +
-            "r.weather.avgTa between :temperature-5.0 and :temperature+5.0 " + "order by r.stars DESC, r.recordDate DESC")
+            "r.weather.avgTa between :temperature-5.0 and :temperature+5.0 " + "order by r.stars DESC, r.date DESC")
     List<Record> findAllByMemberAndTemperature(@Param("memberId")Long memberId, @Param("temperature")double temperature, Pageable pageable);
 }

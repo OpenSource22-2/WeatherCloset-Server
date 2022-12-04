@@ -74,7 +74,7 @@ public class RecordService {
                 .comment(comment)
                 .weather(weather)
                 .heart(heart)
-                .recordDate(recordDate)
+                .date(recordDate)
                 .build();
         record.setTags(tags);
 

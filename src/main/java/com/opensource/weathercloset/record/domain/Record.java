@@ -45,7 +45,7 @@ public class Record extends DateTimeEntity {
     private boolean heart;
 
     @Column(name = "date", nullable = false)
-    private LocalDate recordDate;
+    private LocalDate date;
 
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "member_id")
@@ -62,7 +62,8 @@ public class Record extends DateTimeEntity {
     private Set<Heart> hearts = new HashSet<>();
 
     @Builder
-    public Record(Member member, Weather weather, Set<RecordTag> tags, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate) {
+
+    public Record(Member member, Weather weather, Set<RecordTag> tags, String imageUrl, int stars, String comment, boolean heart, LocalDate date) {
         this.weather = weather;
         this.member = member;
         this.tags = tags;
@@ -70,15 +71,15 @@ public class Record extends DateTimeEntity {
         this.stars = stars;
         this.comment = comment;
         this.heart = heart;
-        this.recordDate = recordDate;
+        this.date = date;
     }
 
-    public void update(String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate, Set<Tag> tags) {
+    public void update(String imageUrl, int stars, String comment, boolean heart, LocalDate date, Set<Tag> tags) {
         this.imageUrl = imageUrl;
         this.stars = stars;
         this.comment = comment;
         this.heart = heart;
-        this.recordDate = recordDate;
+        this.date = date;
         updateTags(tags);
     }
 

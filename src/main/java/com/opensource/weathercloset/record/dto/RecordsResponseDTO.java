@@ -24,7 +24,7 @@ public class RecordsResponseDTO {
             pattern = "yyyy. MM. dd",
             locale = "Asia/Seoul"
     )
-    private final LocalDate recordDate;
+    private final LocalDate date;
     private final double temperature;
 
     public static RecordsResponseDTO from (Record record) {
@@ -33,7 +33,7 @@ public class RecordsResponseDTO {
                 .username(record.getMember().getNickname())
                 .imageUrl(record.getImageUrl())
                 .heart(record.isHeart())
-                .recordDate(record.getRecordDate())
+                .date(record.getDate())
                 .temperature(record.getWeather().getAvgTa())
                 .build();
     }
