@@ -1,5 +1,6 @@
 package com.opensource.weathercloset.record.service;
 
+import com.opensource.weathercloset.common.exception.AuthException;
 import com.opensource.weathercloset.common.exception.EntityNotFoundException;
 import com.opensource.weathercloset.common.exception.ErrorCode;
 import com.opensource.weathercloset.heart.service.HeartService;
@@ -77,23 +78,16 @@ public class RecordService {
     public void updateRecord(Long memberId, Long recordId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate, Set<Tag> tags) {
         Member member = findMember(memberId);
         Record record = findRecord(recordId);
-        record.update(imageUrl, stars, comment, recordDate, tags);
-        if(heart)  // false -> true
-            heartService.heart(member, record);
-        else   // true -> false
-            heartService.unheart(member, record);
-
+        checkIsOwner(member, record);
+        record.update(imageUrl, stars, comment, heart, recordDate, tags);
         recordRepository.save(record);
     }
+
     @Transactional
     public void updateHeart(Long memberId, Long recordId, boolean heart) {
         Member member = findMember(memberId);
         Record record = findRecord(recordId);
-        if(heart)   // false -> true
-            heartService.heart(member, record);
-        else   // true -> false
-            heartService.unheart(member, record);
-
+        checkIsOwner(member, record);
         recordRepository.save(record);
     }
 
@@ -124,6 +118,12 @@ public class RecordService {
                 .date(recordDate)
                 .iconType(-1)
                 .build();
+    }
+
+    private void checkIsOwner(Member member, Record record) {
+        if (record.ownerEquals(member)) {
+            throw new AuthException(ErrorCode.AUTH_ERROR);
+        }
     }
 
 }
