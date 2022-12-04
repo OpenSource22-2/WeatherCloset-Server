@@ -3,7 +3,6 @@ package com.opensource.weathercloset.record.service;
 import com.opensource.weathercloset.common.exception.AuthException;
 import com.opensource.weathercloset.common.exception.EntityNotFoundException;
 import com.opensource.weathercloset.common.exception.ErrorCode;
-import com.opensource.weathercloset.heart.service.HeartService;
 import com.opensource.weathercloset.member.domain.Member;
 import com.opensource.weathercloset.member.repository.MemberRepository;
 import com.opensource.weathercloset.record.domain.Record;
@@ -32,7 +31,6 @@ public class RecordService {
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
     private final WeatherRepository weatherRepository;
-    private final HeartService heartService;
 
     public List<RecordsResponseDTO> getRecords(Long memberId) {
         Member member = findMember(memberId);

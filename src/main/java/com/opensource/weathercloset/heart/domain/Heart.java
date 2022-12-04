@@ -12,7 +12,7 @@ import javax.persistence.*;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 
-@Entity
+//@Entity
 @Getter
 @NoArgsConstructor
 public class Heart extends DateTimeEntity {
