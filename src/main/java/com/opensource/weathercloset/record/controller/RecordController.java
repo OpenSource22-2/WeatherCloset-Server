@@ -11,11 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.time.LocalDate;
-
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,9 +52,10 @@ public class RecordController {
         );
     }
 
-    @PutMapping("/record/{recordId}")
+    @PutMapping("/record/{memberId}/{recordId}")
     @Operation(summary = "기록 수정", description = "이미지, 별점, 한 줄 기록, 좋아요 여부, 날짜를 수정합니다")
-    public ResponseEntity<BasicResponse> updateRecord(@PathVariable("recordId") Long recordId,
+    public ResponseEntity<BasicResponse> updateRecord(@PathVariable("memberId") Long memberId,
+                                                      @PathVariable("recordId") Long recordId,
                                                       @RequestBody RecordUpdateRequestDTO requestDTO) {
         String imageUrl = requestDTO.getImageUrl();
         int stars = requestDTO.getStars();
@@ -66,17 +63,18 @@ public class RecordController {
         boolean heart = requestDTO.isHeart();
         LocalDate recordDate = requestDTO.getRecordDate();
 
-        recordService.updateRecord(imageUrl, recordId, stars, comment, heart, recordDate);
+        recordService.updateRecord(memberId, recordId, imageUrl, stars, comment, heart, recordDate);
         return basicResponse.noContent();
     }
 
-    @PutMapping("/record/like/{recordId}")
+    @PutMapping("/record/like/{memberId}/{recordId}")
     @Operation(summary = "좋아요 수정", description = "좋아요 여부를 수정합니다")
-    public ResponseEntity<BasicResponse> updateHeart(@PathVariable("recordId") Long recordId,
-                                       @RequestBody HeartUpdateRequestDTO requestDTO) {
+    public ResponseEntity<BasicResponse> updateHeart(@PathVariable("memberId") Long memberId,
+                                                     @PathVariable("recordId") Long recordId,
+                                                     @RequestBody HeartUpdateRequestDTO requestDTO) {
         boolean heart = requestDTO.isHeart();
 
-        recordService.updateHeart(recordId, heart);
+        recordService.updateHeart(memberId, recordId, heart);
         return basicResponse.noContent();
     }
 

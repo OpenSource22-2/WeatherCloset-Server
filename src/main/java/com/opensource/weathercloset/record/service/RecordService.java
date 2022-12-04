@@ -2,6 +2,7 @@ package com.opensource.weathercloset.record.service;
 
 import com.opensource.weathercloset.common.exception.EntityNotFoundException;
 import com.opensource.weathercloset.common.exception.ErrorCode;
+import com.opensource.weathercloset.heart.service.HeartService;
 import com.opensource.weathercloset.member.domain.Member;
 import com.opensource.weathercloset.member.repository.MemberRepository;
 import com.opensource.weathercloset.record.domain.Record;
@@ -28,6 +29,7 @@ public class RecordService {
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
     private final WeatherRepository weatherRepository;
+    private final HeartService heartService;
 
     public List<RecordsResponseDTO> getRecords(Long memberId) {
         Member member = findMember(memberId);
@@ -67,25 +69,39 @@ public class RecordService {
                 .imageUrl(imageUrl)
                 .stars(stars)
                 .comment(comment)
-                .heart(heart)
                 .weather(weather)
                 .recordDate(recordDate)
                 .build();
+        if(heart)
+            heartService.heart(member, record);
+
         Record saved = recordRepository.save(record);
+
         return RecordResponseDTO.from(saved);
     }
 
     @Transactional
-    public void updateRecord(String imageUrl, Long recordId, int stars, String comment, boolean heart, LocalDate recordDate) {
+    public void updateRecord(Long memberId, Long recordId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate) {
+        Member member = findMember(memberId);
         Record record = findRecord(recordId);
-        record.update(imageUrl, stars, comment, heart, recordDate);
+        record.update(imageUrl, stars, comment, recordDate);
+        if(heart)  // false -> true
+            heartService.heart(member, record);
+        else   // true -> false
+            heartService.unheart(member, record);
+
         recordRepository.save(record);
     }
 
     @Transactional
-    public void updateHeart(Long recordId, boolean heart) {
+    public void updateHeart(Long memberId, Long recordId, boolean heart) {
+        Member member = findMember(memberId);
         Record record = findRecord(recordId);
-        record.setHeart(heart);
+        if(heart)   // false -> true
+            heartService.heart(member, record);
+        else   // true -> false
+            heartService.unheart(member, record);
+
         recordRepository.save(record);
     }
 
@@ -95,14 +111,15 @@ public class RecordService {
         recordRepository.delete(record);
     }
 
-    private Member findMember(Long id) {
+    public Member findMember(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
-    private Record findRecord(Long id) {
+    public Record findRecord(Long id) {
         return recordRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.RECORD_NOT_FOUND));
     }
+
 }
 

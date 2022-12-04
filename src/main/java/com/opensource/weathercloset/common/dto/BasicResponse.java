@@ -30,6 +30,12 @@ public class BasicResponse {
         return new ResponseEntity<>(basicResponse, HttpStatus.OK);
     }
 
+    public ResponseEntity<BasicResponse> created(Object data) {
+        BasicResponse basicResponse = new BasicResponse(201, "성공", data);
+        return new ResponseEntity<>(basicResponse, HttpStatus.CREATED);
+    }
+
+
     public ResponseEntity<BasicResponse> noContent() {
         BasicResponse basicResponse = new BasicResponse(204, "성공", "");
         return new ResponseEntity<>(basicResponse, HttpStatus.OK);

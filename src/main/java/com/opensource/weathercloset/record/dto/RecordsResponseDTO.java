@@ -25,15 +25,16 @@ public class RecordsResponseDTO {
             locale = "Asia/Seoul"
     )
     private final LocalDate recordDate;
-
+    private final double temperature;
 
     public static RecordsResponseDTO from (Record record) {
         return RecordsResponseDTO.builder()
                 .id(record.getId())
                 .username(record.getMember().getNickname())
                 .imageUrl(record.getImageUrl())
-                .heart(record.isHeart())
+                .heart(record.didHeart())
                 .recordDate(record.getRecordDate())
+                .temperature(record.getWeather().getAvgTa())
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.opensource.weathercloset.record.domain;
 
 import com.opensource.weathercloset.common.domain.DateTimeEntity;
+import com.opensource.weathercloset.heart.domain.Heart;
 import com.opensource.weathercloset.member.domain.Member;
 import com.opensource.weathercloset.weather.domain.Weather;
 import lombok.AllArgsConstructor;
@@ -10,12 +11,12 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -36,8 +37,6 @@ public class Record extends DateTimeEntity {
     @Column(length = 50)
     private String comment;
 
-    private boolean heart;
-
     @Column(name = "date", nullable = false)
     private LocalDate recordDate;
 
@@ -49,6 +48,9 @@ public class Record extends DateTimeEntity {
     @JoinColumn(name = "weather_id")
     private Weather weather;
 
+    @OneToMany(mappedBy = "record", cascade = REMOVE, orphanRemoval = true, fetch = EAGER)
+    private Set<Heart> hearts = new HashSet<>();
+
     @Builder
     public Record(Member member, Weather weather, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate) {
         this.weather = weather;
@@ -56,20 +58,19 @@ public class Record extends DateTimeEntity {
         this.imageUrl = imageUrl;
         this.stars = stars;
         this.comment = comment;
-        this.heart = heart;
         this.recordDate = recordDate;
     }
 
-    public void update(String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate) {
+    public void update(String imageUrl, int stars, String comment, LocalDate recordDate) {
         this.imageUrl = imageUrl;
         this.stars = stars;
         this.comment = comment;
-        this.heart = heart;
         this.recordDate = recordDate;
     }
 
-    public void setHeart(boolean heart) {
-        this.heart = heart;
+    public boolean didHeart(){
+        return hearts.stream()
+                .anyMatch(heart -> heart.didHeart(this.getId()));
     }
 
 }
