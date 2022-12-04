@@ -9,12 +9,13 @@ import com.opensource.weathercloset.member.domain.Member;
 import com.opensource.weathercloset.record.domain.Record;
 import com.opensource.weathercloset.record.dto.RecordsResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Service
+@Service
 @RequiredArgsConstructor
 public class HeartService {
 
