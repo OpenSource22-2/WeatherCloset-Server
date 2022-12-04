@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+//@RestController
 @RequiredArgsConstructor
 @RequestMapping("/heart")
 @Tag(name = "heart", description = "좋아요 API")

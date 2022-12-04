@@ -1,8 +1,8 @@
 package com.opensource.weathercloset.record.service;
 
+import com.opensource.weathercloset.common.exception.AuthException;
 import com.opensource.weathercloset.common.exception.EntityNotFoundException;
 import com.opensource.weathercloset.common.exception.ErrorCode;
-import com.opensource.weathercloset.heart.service.HeartService;
 import com.opensource.weathercloset.member.domain.Member;
 import com.opensource.weathercloset.member.repository.MemberRepository;
 import com.opensource.weathercloset.record.domain.Record;
@@ -10,6 +10,7 @@ import com.opensource.weathercloset.record.dto.RecordResponseDTO;
 import com.opensource.weathercloset.record.dto.RecordsResponseDTO;
 import com.opensource.weathercloset.record.repository.RecordRepository;
 import com.opensource.weathercloset.tag.domain.Tag;
+import com.opensource.weathercloset.tag.repository.TagRepository;
 import com.opensource.weathercloset.weather.domain.Weather;
 import com.opensource.weathercloset.weather.repository.WeatherRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class RecordService {
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
     private final WeatherRepository weatherRepository;
-    private final HeartService heartService;
+    private final TagRepository tagRepository;
 
     public List<RecordsResponseDTO> getRecords(Long memberId) {
         Member member = findMember(memberId);
@@ -72,11 +73,10 @@ public class RecordService {
                 .stars(stars)
                 .comment(comment)
                 .weather(weather)
+                .heart(heart)
                 .date(recordDate)
                 .build();
         record.setTags(tags);
-        if(heart)
-            heartService.heart(member, record);
 
         Record saved = recordRepository.save(record);
         return RecordResponseDTO.from(saved);
@@ -86,23 +86,17 @@ public class RecordService {
     public void updateRecord(Long memberId, Long recordId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate, Set<Tag> tags) {
         Member member = findMember(memberId);
         Record record = findRecord(recordId);
-        record.update(imageUrl, stars, comment, recordDate, tags);
-        if(heart)  // false -> true
-            heartService.heart(member, record);
-        else   // true -> false
-            heartService.unheart(member, record);
-
+        checkIsOwner(member, record);
+        record.update(imageUrl, stars, comment, heart, recordDate, tags);
         recordRepository.save(record);
     }
+
     @Transactional
     public void updateHeart(Long memberId, Long recordId, boolean heart) {
         Member member = findMember(memberId);
         Record record = findRecord(recordId);
-        if(heart)   // false -> true
-            heartService.heart(member, record);
-        else   // true -> false
-            heartService.unheart(member, record);
-
+        checkIsOwner(member, record);
+        record.setHeart(heart);
         recordRepository.save(record);
     }
 
@@ -120,6 +114,12 @@ public class RecordService {
     private Record findRecord(Long id) {
         return recordRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.RECORD_NOT_FOUND));
+    }
+
+    private void checkIsOwner(Member member, Record record) {
+        if (!record.ownerEquals(member)) {
+            throw new AuthException(ErrorCode.AUTH_ERROR);
+        }
     }
 
     private Weather dummyWeather(LocalDate recordDate) {
