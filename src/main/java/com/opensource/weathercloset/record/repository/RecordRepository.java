@@ -2,6 +2,7 @@ package com.opensource.weathercloset.record.repository;
 
 import com.opensource.weathercloset.member.domain.Member;
 import com.opensource.weathercloset.record.domain.Record;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +22,8 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "order by date ASC limit 8", nativeQuery = true)
     List<Record> findAllByMemberAndDate(@Param("memberId")Long memberId, @Param("date")LocalDate date);
 
+    @Query(value = "select distinct r from Record r " +
+            "where r.member.id = :memberId and " +
+            "r.weather.avgTa between :temperature-5.0 and :temperature+5.0 " + "order by r.stars DESC, r.recordDate DESC")
+    List<Record> findAllByMemberAndTemperature(@Param("memberId")Long memberId, @Param("temperature")double temperature, Pageable pageable);
 }

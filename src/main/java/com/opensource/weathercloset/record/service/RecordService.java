@@ -15,6 +15,7 @@ import com.opensource.weathercloset.weather.domain.Weather;
 import com.opensource.weathercloset.weather.repository.WeatherRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -44,6 +45,14 @@ public class RecordService {
     public RecordResponseDTO getRecord(Long recordId) {
         Record record = findRecord(recordId);
         return RecordResponseDTO.from(record);
+    }
+
+    public List<RecordsResponseDTO> getHomeRecords(Long memberId, double temperature) {
+        memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+        return recordRepository.findAllByMemberAndTemperature(memberId, temperature, Pageable.ofSize(8)).stream()
+                .map(RecordsResponseDTO::from)
+                .collect(Collectors.toList());
     }
 
     @Transactional

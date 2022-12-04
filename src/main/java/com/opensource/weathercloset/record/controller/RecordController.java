@@ -41,6 +41,14 @@ public class RecordController {
         );
     }
 
+    @GetMapping("/home/{memberId}")
+    @Operation(summary = "홈 화면 기록 조회", description = "홈 화면 기록을 조회합니다")
+    public ResponseEntity<BasicResponse> getHomeRecords(@PathVariable("memberId") Long memberId, @RequestParam double temperature) {
+        return basicResponse.ok(
+                recordService.getHomeRecords(memberId, temperature)
+        );
+    }
+
     @PostMapping("/record/{memberId}")
     @Operation(summary = "기록 등록", description = "기록을 신규 등록합니다")
     public ResponseEntity<BasicResponse> addRecord(@PathVariable("memberId") Long memberId,
