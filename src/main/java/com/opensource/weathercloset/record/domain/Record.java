@@ -47,7 +47,7 @@ public class Record extends DateTimeEntity {
     @Column(name = "date", nullable = false)
     private LocalDate recordDate;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -79,7 +79,13 @@ public class Record extends DateTimeEntity {
         this.comment = comment;
         this.heart = heart;
         this.recordDate = recordDate;
-        setTags(tags);
+        updateTags(tags);
+    }
+
+    public Set<String> getTags() {
+        return tags.stream()
+                .map(RecordTag::getTagName)
+                .collect(Collectors.toSet());
     }
 
     public void setTags(Set<Tag> tags) {
@@ -88,10 +94,13 @@ public class Record extends DateTimeEntity {
                 .collect(Collectors.toSet());
     }
 
-    public Set<String> getTags() {
-        return tags.stream()
-                .map(RecordTag::getTagName)
-                .collect(Collectors.toSet());
+    public void updateTags(Set<Tag> tags) {
+        this.tags.clear();
+        this.tags.addAll(
+                tags.stream()
+                .map(tag -> new RecordTag(this, tag))
+                .collect(Collectors.toSet())
+        );
     }
 
     public void setHeart(boolean heart) {
