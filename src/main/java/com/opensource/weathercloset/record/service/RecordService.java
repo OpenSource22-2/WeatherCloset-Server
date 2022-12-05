@@ -42,18 +42,25 @@ public class RecordService {
                 .collect(Collectors.toList());
     }
 
+    public List<RecordsResponseDTO> getRecordsByTemperature(Long memberId, double temperature) {
+        findMember(memberId);
+        return recordRepository.findAllByMemberAndTemperature(memberId, temperature, Pageable.ofSize(8)).stream()
+                .map(RecordsResponseDTO::from)
+                .collect(Collectors.toList());
+    }
+
+    public List<RecordsResponseDTO> getRecordsByHeart(Long memberId) {
+        Member member = findMember(memberId);
+        return recordRepository.findAllByHeart(member, Pageable.ofSize(8)).stream()
+                .map(RecordsResponseDTO::from)
+                .collect(Collectors.toList());
+    }
+
     public RecordResponseDTO getRecord(Long recordId) {
         Record record = findRecord(recordId);
         return RecordResponseDTO.from(record);
     }
 
-    public List<RecordsResponseDTO> getHomeRecords(Long memberId, double temperature) {
-        memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-        return recordRepository.findAllByMemberAndTemperature(memberId, temperature, Pageable.ofSize(8)).stream()
-                .map(RecordsResponseDTO::from)
-                .collect(Collectors.toList());
-    }
 
     @Transactional
     public RecordResponseDTO addRecord(Long memberId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate, Set<Tag> tags) {
