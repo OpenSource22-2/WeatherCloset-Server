@@ -22,7 +22,7 @@ public class CalendarService {
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
 
-    public List<RecordsResponseDTO> getCalendarInfo(Long memberId, LocalDate date) {
+    public List<RecordsResponseDTO> getRecordsByMemberAndDate(Long memberId, LocalDate date) {
         memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         return recordRepository.findAllByMemberAndDate(memberId, date, Pageable.ofSize(31)).stream()
