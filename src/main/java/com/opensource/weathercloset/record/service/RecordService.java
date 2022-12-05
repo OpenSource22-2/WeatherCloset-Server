@@ -35,21 +35,7 @@ public class RecordService {
 
     public List<RecordsResponseDTO> getRecords(Long memberId) {
         Member member = findMember(memberId);
-        return recordRepository.findAllByMember(member, Pageable.ofSize(8)).stream()
-                .map(RecordsResponseDTO::from)
-                .collect(Collectors.toList());
-    }
-
-    public List<RecordsResponseDTO> getRecordsByTemperature(Long memberId, double temperature) {
-        findMember(memberId);
-        return recordRepository.findAllByMemberAndTemperature(memberId, temperature, Pageable.ofSize(8)).stream()
-                .map(RecordsResponseDTO::from)
-                .collect(Collectors.toList());
-    }
-
-    public List<RecordsResponseDTO> getRecordsByHeart(Long memberId) {
-        Member member = findMember(memberId);
-        return recordRepository.findAllByMemberAndHeartIsTrue(member, Pageable.ofSize(8)).stream()
+        return recordRepository.findAllByMemberOrderByCreatedAtDesc(member, Pageable.ofSize(8)).stream()
                 .map(RecordsResponseDTO::from)
                 .collect(Collectors.toList());
     }
