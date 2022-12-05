@@ -14,6 +14,14 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
     List<Record> findAllByMember(Member member);
 
+    @Query("select distinct r from Record r " +
+            "where r.member.id = :memberId and " +
+            "r.weather.avgTa between :temperature-5.0 and :temperature+5.0 " +
+            "order by r.stars DESC, r.date DESC")
+    List<Record> findAllByMemberAndTemperature(@Param("memberId")Long memberId, @Param("temperature")double temperature, Pageable pageable);
+
+    List<Record> findAllByMemberAndHeartIsTrue(Member member);
+
     @Query("select distinct r from Record r where r.weather.avgTa between :min and :max")
     List<Record> findAllByTemperatureBetween(@Param("min")double minTemperature, @Param("max")double maxTemperature);
 
@@ -22,8 +30,4 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "order by date ASC limit 8", nativeQuery = true)
     List<Record> findAllByMemberAndDate(@Param("memberId")Long memberId, @Param("date")LocalDate date);
 
-    @Query(value = "select distinct r from Record r " +
-            "where r.member.id = :memberId and " +
-            "r.weather.avgTa between :temperature-5.0 and :temperature+5.0 " + "order by r.stars DESC, r.date DESC")
-    List<Record> findAllByMemberAndTemperature(@Param("memberId")Long memberId, @Param("temperature")double temperature, Pageable pageable);
 }
