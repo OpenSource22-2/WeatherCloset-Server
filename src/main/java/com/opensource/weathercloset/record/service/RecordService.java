@@ -10,7 +10,6 @@ import com.opensource.weathercloset.record.dto.RecordResponseDTO;
 import com.opensource.weathercloset.record.dto.RecordsResponseDTO;
 import com.opensource.weathercloset.record.repository.RecordRepository;
 import com.opensource.weathercloset.tag.domain.Tag;
-import com.opensource.weathercloset.tag.repository.TagRepository;
 import com.opensource.weathercloset.weather.domain.Weather;
 import com.opensource.weathercloset.weather.repository.WeatherRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,11 +32,24 @@ public class RecordService {
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
     private final WeatherRepository weatherRepository;
-    private final TagRepository tagRepository;
 
     public List<RecordsResponseDTO> getRecords(Long memberId) {
         Member member = findMember(memberId);
-        return recordRepository.findAllByMemberOrderByDateDesc(member).stream()
+        return recordRepository.findAllByMemberOrderByDateDesc(member, Pageable.ofSize(8)).stream()
+                .map(RecordsResponseDTO::from)
+                .collect(Collectors.toList());
+    }
+
+    public List<RecordsResponseDTO> getRecordsByTemperature(Long memberId, double temperature) {
+        findMember(memberId);
+        return recordRepository.findAllByMemberAndTemperature(memberId, temperature, Pageable.ofSize(8)).stream()
+                .map(RecordsResponseDTO::from)
+                .collect(Collectors.toList());
+    }
+
+    public List<RecordsResponseDTO> getRecordsByHeart(Long memberId) {
+        Member member = findMember(memberId);
+        return recordRepository.findAllByMemberAndHeartIsTrue(member, Pageable.ofSize(8)).stream()
                 .map(RecordsResponseDTO::from)
                 .collect(Collectors.toList());
     }
@@ -47,13 +59,6 @@ public class RecordService {
         return RecordResponseDTO.from(record);
     }
 
-    public List<RecordsResponseDTO> getHomeRecords(Long memberId, double temperature) {
-        memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-        return recordRepository.findAllByMemberAndTemperature(memberId, temperature, Pageable.ofSize(8)).stream()
-                .map(RecordsResponseDTO::from)
-                .collect(Collectors.toList());
-    }
 
     @Transactional
     public RecordResponseDTO addRecord(Long memberId, String imageUrl, int stars, String comment, boolean heart, LocalDate recordDate, Set<Tag> tags) {

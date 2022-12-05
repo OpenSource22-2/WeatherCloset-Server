@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
-import static org.springframework.http.HttpStatus.OK;
-
 @RestController
 @RequestMapping("/calendar")
 @RequiredArgsConstructor
@@ -28,7 +26,7 @@ public class CalendarController {
                                                          @RequestParam int year, @RequestParam int month) {
         LocalDate localDate = LocalDate.of(year, month, 1);
         return basicResponse.ok(
-                calendarService.getCalendarInfo(memberId, localDate)
+                calendarService.getRecordsByMemberAndDate(memberId, localDate)
         );
     }
 

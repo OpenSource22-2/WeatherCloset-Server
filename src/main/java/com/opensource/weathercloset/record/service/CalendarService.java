@@ -7,6 +7,7 @@ import com.opensource.weathercloset.record.dto.RecordsResponseDTO;
 import com.opensource.weathercloset.record.repository.RecordRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,10 +22,10 @@ public class CalendarService {
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
 
-    public List<RecordsResponseDTO> getCalendarInfo(Long memberId, LocalDate date) {
+    public List<RecordsResponseDTO> getRecordsByMemberAndDate(Long memberId, LocalDate date) {
         memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-        return recordRepository.findAllByMemberAndDate(memberId, date).stream()
+        return recordRepository.findAllByMemberAndDate(memberId, date, Pageable.ofSize(31)).stream()
                 .map(RecordsResponseDTO::from)
                 .collect(Collectors.toList());
     }

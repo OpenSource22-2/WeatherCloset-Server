@@ -25,27 +25,11 @@ public class RecordController {
     private final TagService tagService;
     private final BasicResponse basicResponse = new BasicResponse();
 
-    @GetMapping("/member/{memberId}")
-    @Operation(summary = "사용자 기록 조회", description = "사용자의 기록을 조회합니다")
-    public ResponseEntity<BasicResponse> getRecords(@PathVariable("memberId") Long memberId) {
-        return basicResponse.ok(
-                recordService.getRecords(memberId)
-        );
-    }
-
     @GetMapping("/record/{recordId}")
     @Operation(summary = "기록 단건 조회", description = "기록을 단건 조회합니다")
     public ResponseEntity<BasicResponse> getRecord(@PathVariable("recordId") Long recordId) {
         return basicResponse.ok(
                 recordService.getRecord(recordId)
-        );
-    }
-
-    @GetMapping("/home/{memberId}")
-    @Operation(summary = "홈 화면 기록 조회", description = "홈 화면 기록을 조회합니다")
-    public ResponseEntity<BasicResponse> getHomeRecords(@PathVariable("memberId") Long memberId, @RequestParam double temperature) {
-        return basicResponse.ok(
-                recordService.getHomeRecords(memberId, temperature)
         );
     }
 
