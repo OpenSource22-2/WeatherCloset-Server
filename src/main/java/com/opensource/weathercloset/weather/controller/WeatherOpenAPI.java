@@ -48,7 +48,7 @@ public class WeatherOpenAPI {
     @Scheduled(cron="0 0 12 * * ?")
     @PostMapping("/api/parse")
     @Operation(summary = "날씨 API 자동 호출", description = "매일 오후 12시에 전날의 날씨 정보를 호출하여 DB에 저장합니다")
-    public ResponseEntity<Weather> addWeather() {
+    public void addWeather() {
         try {
             String result = callWeatherApi();
             JSONArray parseItem = getJsonArray(result);
@@ -92,29 +92,23 @@ public class WeatherOpenAPI {
                         .iconType(iconType)
                         .build();
 
-                return ResponseEntity.ok(
-                        weatherService.addWeather(weather)
-                );
+                weatherService.addWeather(weather);
             }
         } catch(Exception e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     private String callWeatherApi() throws IOException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        Calendar c1 = new GregorianCalendar();
-        c1.add(Calendar.DATE, -1);
-        String strYesterday = sdf.format(c1.getTime());
+        String strYesterday = getYesterday();
 
         StringBuilder urlBuilder = new StringBuilder(WEATHER_OPENAPI_URL)
                 .append("?" + encode("serviceKey", "UTF-8") + "=" + WEATHER_API_TOKEN) /*Service Key*/
                 .append("&" + encode("dataType", "UTF-8") + "=" + encode("JSON", "UTF-8")) /*요청자료형식(XML/JSON) Default : XML*/
                 .append("&" + encode("dataCd", "UTF-8") + "=" + encode("ASOS", "UTF-8")) /*자료 분류 코드(ASOS)*/
                 .append("&" + encode("dateCd", "UTF-8") + "=" + encode("DAY", "UTF-8")) /*날짜 분류 코드(DAY)*/
-                .append("&" + encode("startDt", "UTF-8") + "=" + encode(strYesterday, "UTF-8")) /*조회 기간 시작일(YYYYMMDD)*/
-                .append("&" + encode("endDt", "UTF-8") + "=" + encode(strYesterday, "UTF-8")) /*조회 기간 종료일(YYYYMMDD) (전일(D-1)까지 제공)*/
+                .append("&" + encode("startDt", "UTF-8") + "=" + encode("20221030", "UTF-8")) /*조회 기간 시작일(YYYYMMDD)*/
+                .append("&" + encode("endDt", "UTF-8") + "=" + encode("20221031", "UTF-8")) /*조회 기간 종료일(YYYYMMDD) (전일(D-1)까지 제공)*/
                 .append("&" + encode("stnIds", "UTF-8") + "=" + encode("108", "UTF-8")); /*종관기상관측 지점 번호 (활용가이드 하단 첨부 참조)*/
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -179,6 +173,14 @@ public class WeatherOpenAPI {
             iconType = 5; // 맑음
 
         return iconType;
+    }
+
+    private String getYesterday() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Calendar c1 = new GregorianCalendar();
+        c1.add(Calendar.DATE, -1);
+
+        return sdf.format(c1.getTime());
     }
 
 }
