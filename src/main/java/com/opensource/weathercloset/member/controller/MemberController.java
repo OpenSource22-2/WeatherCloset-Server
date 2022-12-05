@@ -27,7 +27,7 @@ public class MemberController {
 
     @GetMapping("/temperature/{memberId}")
     @Operation(summary = "기온 기반 사용자 기록 조회", description = "사용자의 온도 +-5인 기록을 조회합니다")
-    public ResponseEntity<BasicResponse> getHomeRecords(@PathVariable("memberId") Long memberId, @RequestParam double temperature) {
+    public ResponseEntity<BasicResponse> getRecordsByTemperature(@PathVariable("memberId") Long memberId, @RequestParam double temperature) {
         return basicResponse.ok(
                 recordService.getRecordsByTemperature(memberId, temperature)
         );
