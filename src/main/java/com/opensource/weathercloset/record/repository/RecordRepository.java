@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
 
-    List<Record> findAllByMemberOrderByCreatedAtDesc(Member member, Pageable pageable);
+    List<Record> findAllByMemberOrderByDateDesc(Member member, Pageable pageable);
 
     @Query("select distinct r from Record r " +
             "where r.member.id = :memberId and " +
