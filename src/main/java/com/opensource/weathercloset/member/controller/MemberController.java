@@ -18,7 +18,7 @@ public class MemberController {
     private final BasicResponse basicResponse = new BasicResponse();
 
     @GetMapping("/{memberId}")
-    @Operation(summary = "사용자 기록 조회", description = "사용자의 기록을 조회합니다")
+    @Operation(summary = "사용자 기록 최신 순 조회", description = "사용자의 기록을 최신 순으로 조회합니다")
     public ResponseEntity<BasicResponse> getRecords(@PathVariable("memberId") Long memberId) {
         return basicResponse.ok(
                 recordService.getRecords(memberId)
