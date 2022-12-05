@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
 
-    List<Record> findAllByMember(Member member);
+    List<Record> findAllByMemberOrderByCreatedAtDesc(Member member);
 
     @Query("select distinct r from Record r where r.weather.avgTa between :min and :max")
     List<Record> findAllByTemperatureBetween(@Param("min")double minTemperature, @Param("max")double maxTemperature);
