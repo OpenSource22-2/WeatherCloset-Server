@@ -106,8 +106,8 @@ public class WeatherOpenAPI {
                 .append("&" + encode("dataType", "UTF-8") + "=" + encode("JSON", "UTF-8")) /*요청자료형식(XML/JSON) Default : XML*/
                 .append("&" + encode("dataCd", "UTF-8") + "=" + encode("ASOS", "UTF-8")) /*자료 분류 코드(ASOS)*/
                 .append("&" + encode("dateCd", "UTF-8") + "=" + encode("DAY", "UTF-8")) /*날짜 분류 코드(DAY)*/
-                .append("&" + encode("startDt", "UTF-8") + "=" + encode("20221030", "UTF-8")) /*조회 기간 시작일(YYYYMMDD)*/
-                .append("&" + encode("endDt", "UTF-8") + "=" + encode("20221031", "UTF-8")) /*조회 기간 종료일(YYYYMMDD) (전일(D-1)까지 제공)*/
+                .append("&" + encode("startDt", "UTF-8") + "=" + encode(getYesterday(), "UTF-8")) /*조회 기간 시작일(YYYYMMDD)*/
+                .append("&" + encode("endDt", "UTF-8") + "=" + encode(getYesterday(), "UTF-8")) /*조회 기간 종료일(YYYYMMDD) (전일(D-1)까지 제공)*/
                 .append("&" + encode("stnIds", "UTF-8") + "=" + encode("108", "UTF-8")); /*종관기상관측 지점 번호 (활용가이드 하단 첨부 참조)*/
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
