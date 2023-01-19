@@ -1,4 +1,7 @@
-[![Java CI with Gradle](https://github.com/OpenSource22-2/WeatherCloset-Server/actions/workflows/gradle.yml/badge.svg)](https://github.com/OpenSource22-2/WeatherCloset-Server/actions/workflows/gradle.yml)
+<p>
+  <a href="https://github.com/OpenSource22-2/WeatherCloset-Server/actions/workflows/gradle.yml"><img src="https://github.com/OpenSource22-2/WeatherCloset-Server/actions/workflows/gradle.yml/badge.svg"/></a> &nbsp
+  <img src="https://img.shields.io/badge/test%20server-down-red"/>
+</p>
 
 # 날씨 옷장 ☀️
 온도에 따른 나의 옷차림 기록 및 리마인드 안드로이드 어플리케이션
